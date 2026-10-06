@@ -958,7 +958,9 @@
      program page), the primary button's label, and the footer hints. */
   function renderChrome() {
     var back = document.getElementById("gui-back");
-    if (back) back.hidden = guiPage !== "programs";
+    // data-visible rather than `hidden`: the slot keeps its width so the title
+    // does not shift when the arrow appears.
+    if (back) back.dataset.visible = guiPage === "programs" ? "true" : "false";
 
     var next = document.getElementById("gui-next");
     if (next) next.textContent = guiPage === "programs" ? "Start Cleaning" : "Next";
