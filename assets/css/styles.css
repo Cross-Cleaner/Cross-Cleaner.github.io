@@ -680,19 +680,19 @@ p  { margin: 0; text-wrap: pretty; }
   flex: 0 0 auto;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 8px;
   height: 32px;
   padding-inline: 8px;
   background: var(--egui-window);
   border-bottom: 1px solid var(--egui-stroke);
 }
-/* Title and controls sit together at the right end, the way the bar's
-   right_to_left layout puts them; the back arrow stays on the left. */
-.win__end {
-  margin-left: auto;
+/* Title (and the back arrow) on the left, window controls pushed right by
+   space-between. */
+.win__start {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   min-width: 0;
 }
 .win__title {
@@ -806,7 +806,8 @@ p  { margin: 0; text-wrap: pretty; }
 }
 .wbtn:hover { background: #474747; }
 
-/* Back arrow in the title bar, shown only where Page::has_back() is true. */
+/* Back arrow in the title bar, shown only where Page::has_back() is true. It
+   keeps its width when hidden so the title never moves between pages. */
 .win__back {
   border: 0;
   background: transparent;
@@ -814,12 +815,15 @@ p  { margin: 0; text-wrap: pretty; }
   font: inherit;
   font-size: 15px;
   line-height: 1;
-  padding: 2px 6px 2px 0;
-  margin-right: 4px;
+  padding: 2px 2px 2px 0;
+  margin-right: 0;
   cursor: pointer;
 }
 .win__back:hover { color: var(--egui-text); }
-.win__back[hidden] { display: none; }
+.win__back[data-visible="false"] {
+  visibility: hidden;
+  pointer-events: none;
+}
 
 /* Program page: centred heading, separator, search field, two columns. */
 .gui-heading {

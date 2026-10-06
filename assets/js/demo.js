@@ -1,10 +1,10 @@
-/**
- * Cross Cleaner — the two interface mockups in #gallery, made live.
+﻿/**
+ * Cross Cleaner вЂ” the two interface mockups in #gallery, made live.
  *
  * These are not screenshots: they re-implement the selection model from
  * crates/appcore/src/categories.rs and the cell layout from
  * crates/gui/src/pages/main.rs and crates/tui/src/pages/main.rs, so what you
- * click in the page behaves the way the real program does — including the
+ * click in the page behaves the way the real program does вЂ” including the
  * tristate rules, the mirrored right-hand column in the terminal, and the
  * centred subcategory overlay from crates/tui/src/app.rs.
  *
@@ -14,7 +14,7 @@
 (function () {
   "use strict";
 
-  /* ── Data ─────────────────────────────────────────────────────────────
+  /* в”Ђв”Ђ Data в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
      Names, entry counts and subcategories come from
      crates/database/windows_database.json, and the order is the one
      category_priority() in crates/appcore/src/app.rs produces: the categories
@@ -103,7 +103,7 @@
   };
 
   /* The opening state, so the demo starts mid-selection the way the static
-     markup does. Note that a leaf category — one with no subcategories — can
+     markup does. Note that a leaf category вЂ” one with no subcategories вЂ” can
      only ever be checked or unchecked: its selected set is just "Uncategorized",
      so there is no third state to show.
        Cache, Documentation, Browser, Downloads  fully selected
@@ -125,7 +125,7 @@
     });
   }
 
-  /* ── Selection model, ported from CategoryState ───────────────────────── */
+  /* в”Ђв”Ђ Selection model, ported from CategoryState в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ */
 
   function isChecked(cat) {
     if (cat.subs.length === 0 && !cat.hasEmpty) return cat.selected.length > 0;
@@ -144,7 +144,7 @@
     return cat.selected.length === 0;
   }
 
-  /** CategoryState::toggle — select everything, or clear it. */
+  /** CategoryState::toggle вЂ” select everything, or clear it. */
   function toggleCategory(cat) {
     if (isChecked(cat) || isIndeterminate(cat)) {
       cat.selected = [];
@@ -156,7 +156,7 @@
     return true;
   }
 
-  /** CategoryState::toggle_sub — flip a single entry. */
+  /** CategoryState::toggle_sub вЂ” flip a single entry. */
   function toggleSub(cat, sub) {
     var at = cat.selected.indexOf(sub);
     if (at === -1) {
@@ -173,7 +173,7 @@
     }).length;
   }
 
-  /** "Cache (71)" — the label AppState::category_label builds. */
+  /** "Cache (71)" вЂ” the label AppState::category_label builds. */
   function label(cat) {
     return cat.name + " (" + cat.count + ")";
   }
@@ -192,12 +192,12 @@
     });
   }
 
-  /** AppState::sub_label — the name with its entry count, e.g. "Licenses (96)". */
+  /** AppState::sub_label вЂ” the name with its entry count, e.g. "Licenses (96)". */
   function subLabel(name, count) {
     return (name === "" ? "Uncategorized" : name) + " (" + count + ")";
   }
 
-  /* ── Program list ──────────────────────────────────────────────────────
+  /* в”Ђв”Ђ Program list в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
      build_program_list() in crates/appcore/src/app.rs: every database entry
      whose category *and* subcategory are selected contributes its program, a
      program seen under several categories is merged into one row, and the list
@@ -240,12 +240,12 @@
       });
   }
 
-  /** ProgramState::is_program_checked — off only when every category is off. */
+  /** ProgramState::is_program_checked вЂ” off only when every category is off. */
   function programChecked(program) {
     return program.disabled.length === 0;
   }
 
-  /** ProgramState::is_program_indeterminate — some but not all categories off. */
+  /** ProgramState::is_program_indeterminate вЂ” some but not all categories off. */
   function programIndeterminate(program) {
     return program.disabled.length > 0 && program.disabled.length < program.categories.length;
   }
@@ -286,14 +286,20 @@
     return svg;
   }
 
-  /* ── Window app mock ──────────────────────────────────────────────────── */
+  /* в”Ђв”Ђ Window app mock в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ */
 
   var guiPop = document.getElementById("gui-pop");
   var guiPopIndex = -1;
   /* Page state, mirroring AppState::current_page. */
   var guiPage = "categories";
   var tuiPage = "categories";
-  var programs = [];
+  /* One program list per frontend. They are separate windows showing separate
+     apps, so going back in one must not disturb the other вЂ” with a single
+     shared list the window mock's back button wiped the terminal's. The
+     category selection above is shared on purpose: both frontends read the
+     same database, exactly as they do in the real app. */
+  var guiPrograms = [];
+  var tuiPrograms = [];
   var guiSearch = "";
   var tuiSearch = "";
   var tuiSearchEditing = false;
@@ -301,16 +307,23 @@
   var toast = null;
 
   function setPage(which, page) {
-    if (which === "gui") guiPage = page;
-    else tuiPage = page;
-    // Leaving the program page drops the list, the way the real app rebuilds it
-    // from the category selection every time `Next` is pressed.
+    if (which === "gui") {
+      guiPage = page;
+      // Leaving the program page drops the list, the way the real app rebuilds
+      // it from the category selection every time `Next` is pressed.
+      if (page === "categories") {
+        guiSearch = "";
+        guiPrograms = [];
+      }
+      return;
+    }
+
+    tuiPage = page;
     if (page === "categories") {
-      guiSearch = "";
       tuiSearch = "";
       tuiSearchEditing = false;
       tuiProgramCursor = 0;
-      programs = [];
+      tuiPrograms = [];
     }
   }
 
@@ -326,18 +339,19 @@
     }, 2600);
   }
 
-  /* ── Next / Start Cleaning ─────────────────────────────────────────────
+  /* в”Ђв”Ђ Next / Start Cleaning в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
      `Next` is build_program_list(): it returns false with nothing selected, and
      the terminal app answers that with a toast rather than changing page. */
 
-  function goToPrograms() {
+  function goToPrograms(which) {
     var list = buildProgramList();
     if (!list.length) {
       showToast("Select at least one category first.");
       renderAll();
       return false;
     }
-    programs = list;
+    if (which === "gui") guiPrograms = list;
+    else tuiPrograms = list;
     return true;
   }
 
@@ -394,7 +408,7 @@
       box.setAttribute("aria-hidden", "true");
 
       // The checkbox widget in egui carries its own label, and the menu button
-      // is added after it — so in the rightmost column, which is laid out
+      // is added after it вЂ” so in the rightmost column, which is laid out
       // right-to-left, the button lands on the far side of the row. Both orders
       // end up with the button on the outside, which is what
       // category_menu_button() does with its `mirrored` flag.
@@ -433,7 +447,7 @@
     });
   }
 
-  /** The window app's program page: crates/gui/src/pages/program_selection.rs —
+  /** The window app's program page: crates/gui/src/pages/program_selection.rs вЂ”
       centred heading, a search field, two columns of program checkboxes and a
       pinned "Start Cleaning" button. */
   function renderGuiPrograms() {
@@ -467,7 +481,7 @@
     search.appendChild(input);
     head.appendChild(search);
 
-    var shown = filterPrograms(programs, guiSearch);
+    var shown = filterPrograms(guiPrograms, guiSearch);
     var list = el("div", "gui-list");
     if (shown.length === 0) {
       list.appendChild(el("p", "gui-empty", guiSearch ? "No program matches the search." : "No programs for the selected categories."));
@@ -581,7 +595,7 @@
     if (refocus && refocus.focus) refocus.focus();
   }
 
-  /* ── Terminal app mock ────────────────────────────────────────────────── */
+  /* в”Ђв”Ђ Terminal app mock в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ */
 
   var tuiFrame = document.getElementById("tui-frame");
   var tuiGrid = document.getElementById("tui-grid");
@@ -618,24 +632,24 @@
 
       var check = tuiCheck(cat);
       var hintCount = cat.selected.length;
-      // Written by cell_spans(): marker, checkbox, label, hint — then the exact
+      // Written by cell_spans(): marker, checkbox, label, hint вЂ” then the exact
       // mirror for the right-hand column, so the checkbox lands on the right
       // edge and the hint moves in front of the label.
       if (!right) {
         cell.appendChild(el("i", check[1], check[0]));
         cell.appendChild(el("span", null, label(cat)));
         if (cat.subs.length) {
-          cell.appendChild(el("span", hintClass(cat), "  → " + hintCount));
+          cell.appendChild(el("span", hintClass(cat), "  в†’ " + hintCount));
         }
       } else {
         if (cat.subs.length) {
-          cell.appendChild(el("span", hintClass(cat), hintCount + " ←  "));
+          cell.appendChild(el("span", hintClass(cat), hintCount + " в†ђ  "));
         }
         cell.appendChild(el("span", null, label(cat)));
         cell.appendChild(el("i", check[1], check[0]));
       }
 
-      cell.title = label(cat) + " — click, or use the arrow keys";
+      cell.title = label(cat) + " вЂ” click, or use the arrow keys";
       cell.addEventListener("click", function () {
         cursor = index;
         toggleCategory(cat);
@@ -651,28 +665,28 @@
   }
 
   /** The terminal app's program page: crates/tui/src/pages/program_selection.rs
-      — a search field, a "Programs (n/m shown)" block and a pinned
+      вЂ” a search field, a "Programs (n/m shown)" block and a pinned
       "Start Cleaning" button. */
   function renderTuiPrograms() {
     if (!tuiGrid) return;
 
-    var shown = filterPrograms(programs, tuiSearch);
+    var shown = filterPrograms(tuiPrograms, tuiSearch);
 
     tuiGrid.textContent = "";
     tuiGrid.className = "term__list";
 
     // The search field goes in its own slot above the scrolling list. Inside
     // the list it became a grid row, and the flex container collapsed to its
-    // padding under the row's stretch — leaving an invisible search line.
+    // padding under the row's stretch вЂ” leaving an invisible search line.
     var slot = document.getElementById("tui-search-slot");
     if (slot) {
       slot.textContent = "";
       var search = el("div", "term__search");
       search.appendChild(el("b", "t-dim", " Search: "));
       if (tuiSearch) search.appendChild(el("span", null, tuiSearch));
-      else search.appendChild(el("span", "t-dim", "type a program name…"));
-      search.appendChild(el("span", "t-caret", tuiSearchEditing ? "▏" : "  "));
-      search.appendChild(el("span", "t-dim", tuiSearchEditing ? "  esc/enter done · backspace delete" : "  / to search · u to clear"));
+      else search.appendChild(el("span", "t-dim", "type a program nameвЂ¦"));
+      search.appendChild(el("span", "t-caret", tuiSearchEditing ? "в–Џ" : "  "));
+      search.appendChild(el("span", "t-dim", tuiSearchEditing ? "  esc/enter done В· backspace delete" : "  / to search В· u to clear"));
       slot.appendChild(search);
     }
 
@@ -692,7 +706,7 @@
       // Only programs in several categories carry the arrow, as program_items()
       // does; it turns warn-coloured once a category is excluded.
       if (program.categories.length > 1) {
-        row.appendChild(el("span", program.disabled.length ? "t-warn" : "t-dim", "  → " + program.categories.length));
+        row.appendChild(el("span", program.disabled.length ? "t-warn" : "t-dim", "  в†’ " + program.categories.length));
       }
       row.addEventListener("click", function () {
         tuiProgramCursor = i;
@@ -744,7 +758,7 @@
       list.appendChild(row);
     });
     tuiPop.appendChild(list);
-    tuiPop.appendChild(el("div", "term__pop-foot", "↑↓ move · space toggle · esc close"));
+    tuiPop.appendChild(el("div", "term__pop-foot", "в†‘в†“ move В· space toggle В· esc close"));
     tuiPop.hidden = false;
   }
 
@@ -779,15 +793,15 @@
 
   /** move_list() on the program page: wraps at both ends. */
   function moveProgramCursor(delta) {
-    var shown = filterPrograms(programs, tuiSearch);
+    var shown = filterPrograms(tuiPrograms, tuiSearch);
     if (shown.length === 0) return;
     tuiProgramCursor = ((tuiProgramCursor + delta) % shown.length + shown.length) % shown.length;
     renderTuiPrograms();
   }
 
   /* Key bindings, following footer_hints() in crates/tui/src/app.rs:
-       ↑↓ row   · tab column   · space select   · enter subs
-     The sideways arrows are bound to the overlay as well, which is the `→ cats`
+       в†‘в†“ row   В· tab column   В· space select   В· enter subs
+     The sideways arrows are bound to the overlay as well, which is the `в†’ cats`
      convention the program page already uses. */
   function initTuiKeys() {
     if (!tuiFrame) return;
@@ -822,8 +836,8 @@
       }
 
       /* While the search field is focused, printable characters go into the query
-       and the single-letter bindings stay out of the way — the app's own hint
-       reads "/ to search · u to clear", and clearing only applies once the field
+       and the single-letter bindings stay out of the way вЂ” the app's own hint
+       reads "/ to search В· u to clear", and clearing only applies once the field
        has been released. */
       if (tuiPage === "programs" && tuiSearchEditing && event.key.length === 1 && !event.ctrlKey && !event.metaKey) {
         tuiSearch += event.key;
@@ -856,7 +870,7 @@
         case " ":
         case "Spacebar":
           if (tuiPage === "programs") {
-            var shown = filterPrograms(programs, tuiSearch);
+            var shown = filterPrograms(tuiPrograms, tuiSearch);
             if (shown[tuiProgramCursor]) toggleProgram(shown[tuiProgramCursor]);
           } else {
             toggleCategory(CATEGORIES[cursor]);
@@ -907,7 +921,7 @@
         case "n":
         case "N":
           if (tuiPage === "categories" && !tuiSearchEditing) {
-            if (goToPrograms()) setPage("tui", "programs");
+            if (goToPrograms("tui")) setPage("tui", "programs");
             renderAll();
             break;
           }
@@ -938,7 +952,7 @@
     });
   }
 
-  /* ── Boot ─────────────────────────────────────────────────────────────── */
+  /* в”Ђв”Ђ Boot в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ */
 
   /* Chrome that differs per page: the back arrow (has_back() is true for the
      program page), the primary button's label, and the footer hints. */
@@ -954,7 +968,7 @@
       count.textContent =
         tuiPage === "programs"
           ? "Programs (" +
-            programs.filter(programChecked).length + "/" + filterPrograms(programs, tuiSearch).length + " shown)"
+            tuiPrograms.filter(programChecked).length + "/" + filterPrograms(tuiPrograms, tuiSearch).length + " shown)"
           : "Categories (" + selectedCount() + "/" + CATEGORIES.length + " selected)";
     }
 
@@ -967,8 +981,8 @@
       foot.textContent = live
         ? (toast.kind === "warn" ? " " + toast.message : " " + toast.message)
         : tuiPage === "programs"
-          ? "↑↓ move · space select · → cats · / search · S start · esc back · ? changelog · G repo · q quit"
-          : "↑↓ row · tab column · space select · →/enter subs · n next · s settings · ? changelog · G repo · q quit";
+          ? "в†‘в†“ move В· space select В· в†’ cats В· / search В· S start В· esc back В· ? changelog В· G repo В· q quit"
+          : "в†‘в†“ row В· tab column В· space select В· в†’/enter subs В· n next В· s settings В· ? changelog В· G repo В· q quit";
       foot.classList.toggle("t-warn", !!live);
     }
   }
@@ -986,7 +1000,7 @@
     if (tuiPopIndex !== -1) renderTuiPop();
   }
 
-  /* ── Wiring the primary buttons ─────────────────────────────────────────
+  /* в”Ђв”Ђ Wiring the primary buttons в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
      The window mock's button is a real <button>; the terminal one is the
      pinned ` Next ` paragraph, so it gets a click handler of its own. */
 
@@ -995,7 +1009,7 @@
     if (next) {
       next.addEventListener("click", function () {
         if (guiPage === "categories") {
-          if (goToPrograms()) setPage("gui", "programs");
+          if (goToPrograms("gui")) setPage("gui", "programs");
         } else {
           showToast("Cleaning is not simulated here.");
         }
@@ -1015,7 +1029,7 @@
     if (tuiNext) {
       tuiNext.addEventListener("click", function () {
         if (tuiPage === "categories") {
-          if (goToPrograms()) setPage("tui", "programs");
+          if (goToPrograms("tui")) setPage("tui", "programs");
         } else {
           showToast("Cleaning is not simulated here.");
         }
