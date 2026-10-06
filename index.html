@@ -405,12 +405,18 @@
           <div class="win">
             <div class="win__bar">
               <button class="win__back" id="gui-back" type="button" aria-label="Back to categories" hidden>&#8592;</button>
-              <span class="win__title">Cross Cleaner v2.0.4</span>
-              <span class="win__controls">
-                <svg class="icon" aria-hidden="true"><use href="#i-code"></use></svg>
-                <span class="win__sep"></span>
-                <span class="win__glyph">&#8211;</span>
-                <span class="win__glyph">&#10005;</span>
+              <!-- Title and window controls are one right-aligned group, which is
+                   what Layout::right_to_left in title_bar.rs produces. Keeping
+                   them in separate flex children made the title the middle item
+                   and sent it to the centre once the back button appeared. -->
+              <span class="win__end">
+                <span class="win__title">Cross Cleaner v2.0.4</span>
+                <span class="win__controls">
+                  <svg class="icon" aria-hidden="true"><use href="#i-code"></use></svg>
+                  <span class="win__sep"></span>
+                  <span class="win__glyph">&#8211;</span>
+                  <span class="win__glyph">&#10005;</span>
+                </span>
               </span>
             </div>
 
@@ -466,6 +472,9 @@
             <div class="term__frame" id="tui-frame" tabindex="0" role="application"
                aria-label="Terminal app category grid. Arrow keys move, space selects, enter opens subcategories.">
               <div class="term__title"><span class="t-dim" id="tui-count">Categories (5/12 selected)</span></div>
+              <!-- Its own block above the list, the way render_search() gives it
+                   Constraint::Length(3) instead of putting it in the list. -->
+              <div class="term__search-slot" id="tui-search-slot"></div>
               <!-- Odd cells are the left column (marker, checkbox, label, then
                    the subcategory arrow); even cells are its mirror, so the
                    checkbox lands against the right edge and the arrow comes

@@ -680,14 +680,29 @@ p  { margin: 0; text-wrap: pretty; }
   flex: 0 0 auto;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 8px;
   height: 32px;
   padding-inline: 8px;
   background: var(--egui-window);
   border-bottom: 1px solid var(--egui-stroke);
 }
-.win__title { font-size: 0.75rem; color: var(--egui-text); }
-.win__controls { display: flex; align-items: center; gap: 10px; font-size: 15px; }
+/* Title and controls sit together at the right end, the way the bar's
+   right_to_left layout puts them; the back arrow stays on the left. */
+.win__end {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.win__title {
+  font-size: 0.75rem;
+  color: var(--egui-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.win__controls { display: flex; align-items: center; gap: 10px; font-size: 15px; flex-shrink: 0; }
 .win__sep { width: 1px; height: 20px; background: var(--egui-stroke); }
 .win__glyph {
   width: 16px;
@@ -1092,13 +1107,20 @@ p  { margin: 0; text-wrap: pretty; }
   border-radius: 3px;
 }
 
-/* Program page: search field, then a plain list of rows inside the frame. */
+/* Program page: the search field is its own block above the scrolling list,
+   which is why it lives in a slot rather than in the list itself. */
+.term__search-slot { flex: 0 0 auto; }
+.term__search-slot:empty { display: none; }
+
 .term__search {
   display: flex;
   align-items: baseline;
   gap: 0.25em;
-  padding-bottom: 6px;
-  margin-bottom: 4px;
+  /* Explicit height: as a flex container inside a grid row it collapsed to
+     its padding and the line became invisible. */
+  min-height: 18px;
+  padding-bottom: 5px;
+  margin-bottom: 5px;
   border-bottom: 1px solid var(--tui-border);
   white-space: nowrap;
   overflow: hidden;

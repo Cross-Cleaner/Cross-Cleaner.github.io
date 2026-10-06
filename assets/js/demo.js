@@ -661,14 +661,20 @@
     tuiGrid.textContent = "";
     tuiGrid.className = "term__list";
 
-    // Search field: the query, a caret while editing, and the page's hints.
-    var search = el("div", "term__search");
-    search.appendChild(el("b", "t-dim", " Search: "));
-    if (tuiSearch) search.appendChild(el("span", null, tuiSearch));
-    else search.appendChild(el("span", "t-dim", "type a program name…"));
-    search.appendChild(el("span", "t-caret", tuiSearchEditing ? "▏" : "  "));
-    search.appendChild(el("span", "t-dim", tuiSearchEditing ? "  esc/enter done · backspace delete" : "  / to search · u to clear"));
-    tuiGrid.appendChild(search);
+    // The search field goes in its own slot above the scrolling list. Inside
+    // the list it became a grid row, and the flex container collapsed to its
+    // padding under the row's stretch — leaving an invisible search line.
+    var slot = document.getElementById("tui-search-slot");
+    if (slot) {
+      slot.textContent = "";
+      var search = el("div", "term__search");
+      search.appendChild(el("b", "t-dim", " Search: "));
+      if (tuiSearch) search.appendChild(el("span", null, tuiSearch));
+      else search.appendChild(el("span", "t-dim", "type a program name…"));
+      search.appendChild(el("span", "t-caret", tuiSearchEditing ? "▏" : "  "));
+      search.appendChild(el("span", "t-dim", tuiSearchEditing ? "  esc/enter done · backspace delete" : "  / to search · u to clear"));
+      slot.appendChild(search);
+    }
 
     if (shown.length === 0) {
       // empty_hint() explains an empty list instead of drawing a blank box.
