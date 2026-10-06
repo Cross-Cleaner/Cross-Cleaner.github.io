@@ -589,7 +589,8 @@ p  { margin: 0; text-wrap: pretty; }
   align-items: start;
 }
 
-.mock { margin: 0; display: grid; gap: 0.875rem; }
+/* Positioning context for the subcategory popup. */
+.mock { margin: 0; display: grid; gap: 0.875rem; position: relative; }
 .mock figcaption {
   text-align: center;
   font-size: 0.8125rem;
@@ -598,7 +599,10 @@ p  { margin: 0; text-wrap: pretty; }
 }
 
 /* --- Window app mock (egui dark) --- */
-.win {
+/* The palette lives on both the window and the popup: the popup is a sibling of
+   .win rather than a child, so it would not inherit these otherwise. */
+.win,
+.gui-pop {
   /* egui's dark theme greys, roughly. */
   --egui-window: #2b2b2b;
   --egui-panel: #323232;
@@ -608,11 +612,14 @@ p  { margin: 0; text-wrap: pretty; }
   --egui-btn: #3d3d3d;
   --egui-accent: #4a90d9;
 
+  color: var(--egui-text);
+  font-size: 0.8125rem;
+}
+
+.win {
   background: var(--egui-window);
   border: 2px solid var(--egui-stroke);
   border-radius: 6px;
-  color: var(--egui-text);
-  font-size: 0.8125rem;
   overflow: hidden;
   box-shadow: 0 14px 34px -22px rgb(0 0 0 / 70%);
 }
@@ -645,68 +652,141 @@ p  { margin: 0; text-wrap: pretty; }
 .win__col { display: grid; gap: 7px; }
 .win__col--rtl { justify-items: end; }
 
+/* Tristate checkbox: empty, checked, or indeterminate (a filled inner square,
+   which is how crates/gui/src/categories.rs paints it).
+
+   The tick is an SVG background rather than a rotated border box — a rotated
+   box cannot be centred reliably and drifts to the top-left of the cell. */
+.gchk {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  border: 1.5px solid var(--egui-dim);
+  border-radius: 3px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 12px 12px;
+}
+.gchk.is-on {
+  background-color: var(--egui-accent);
+  border-color: var(--egui-accent);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'><path d='M20 6 9 17l-5-5'/></svg>");
+}
+.gchk.is-part {
+  border-color: var(--egui-accent);
+  background-image: linear-gradient(var(--egui-accent), var(--egui-accent));
+  background-size: 5px 5px;
+}
+
+/* The subcategory menu button (menu.png, 16x16, tinted with the text colour).
+   Drawn from the Material menu symbol rather than stacked gradients, which
+   merged into an unreadable dash at this size. */
+.gmenu {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  fill: currentColor;
+  color: var(--egui-dim);
+}
+.gmenu--inline { display: inline-block; vertical-align: -3px; color: var(--md-sys-color-on-surface-variant); }
+
+/* Wrapper so the icon is its own hit target inside the row button. */
+.gmenu-btn {
+  display: inline-flex;
+  margin-left: 2px;
+  padding: 2px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.gmenu-btn:hover { background: rgb(255 255 255 / 10%); }
+.gmenu-btn:focus-visible { outline: 2px solid var(--egui-accent); outline-offset: 0; }
+
+/* Clickable cell: the whole row is the checkbox target, as in the app. */
 .gcell {
   display: flex;
   align-items: center;
   gap: 7px;
+  padding: 2px 4px;
+  margin: -2px -4px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
   font-size: 0.8125rem;
+  text-align: left;
   white-space: nowrap;
+  cursor: pointer;
 }
-
-/* Tristate checkbox: empty, checked, or indeterminate (a filled inner square,
-   which is how crates/gui/src/categories.rs paints it). */
-.gchk {
-  width: 14px;
-  height: 14px;
-  flex-shrink: 0;
-  border: 1.5px solid var(--egui-dim);
-  border-radius: 3px;
-  position: relative;
-}
-.gchk.is-on { background: var(--egui-accent); border-color: var(--egui-accent); }
-.gchk.is-on::after {
-  content: "";
-  position: absolute;
-  left: 4px;
-  top: 1px;
-  width: 3px;
-  height: 7px;
-  border: solid #fff;
-  border-width: 0 2px 2px 0;
-  transform: rotate(43deg);
-}
-.gchk.is-part { border-color: var(--egui-accent); }
-.gchk.is-part::after {
-  content: "";
-  position: absolute;
-  inset: 3px;
-  background: var(--egui-accent);
-  border-radius: 1px;
-}
-
-/* The subcategory menu button (menu.png, 16x16, tinted with the text colour). */
-.gmenu {
-  width: 14px;
-  height: 4px;
-  flex-shrink: 0;
-  background: repeating-linear-gradient(
-    to bottom,
-    var(--egui-dim) 0 1px,
-    transparent 1px 2px
-  );
-}
-.gmenu--inline { display: inline-block; vertical-align: -1px; }
+.gcell:hover { background: rgb(255 255 255 / 6%); }
+.gcell:focus-visible { outline: 2px solid var(--egui-accent); outline-offset: 1px; }
+.gcell.is-on { color: #fff; }
 
 .win__foot { padding: 6px 12px 12px; }
 .wbtn {
   display: block;
+  width: 100%;
+  border: 0;
   text-align: center;
   padding: 4px 0;
   background: var(--egui-btn);
   border-radius: 4px;
+  font: inherit;
   font-size: 0.8125rem;
   color: var(--egui-text);
+  cursor: pointer;
 }
+.wbtn:hover { background: #474747; }
+
+/* Subcategory popup, anchored beside the button that opened it like
+   egui::Popup::menu. It sits outside .win so the window's rounded corners and
+   overflow do not clip it. */
+.gui-pop {
+  position: absolute;
+  z-index: 6;
+  min-width: 212px;
+  /* Size to the longest label instead of wrapping it: a subcategory name that
+     broke onto a second line made the list read as ragged rows. */
+  width: max-content;
+  max-height: 240px;
+  overflow-y: auto;
+  padding: 8px 10px;
+  background: var(--egui-panel);
+  border: 1px solid var(--egui-stroke);
+  border-radius: 5px;
+  box-shadow: 0 10px 24px -8px rgb(0 0 0 / 75%);
+}
+.gui-pop[hidden] { display: none; }
+.gui-pop h4 {
+  margin: 0 0 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--egui-dim);
+  white-space: nowrap;
+}
+.gui-pop ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 5px; }
+.gui-pop button {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 2px 4px;
+  margin: 0 -4px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 0.8125rem;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  white-space: nowrap;
+}
+.gui-pop button:hover { background: rgb(255 255 255 / 6%); }
+.gui-pop button:focus-visible { outline: 2px solid var(--egui-accent); outline-offset: 1px; }
+/* The entry count sits right after the name instead of being pushed to a
+   second column with margin-left: auto. */
+.gui-pop .gcount { color: var(--egui-dim); font-size: 0.75rem; flex-shrink: 0; }
 
 /* --- Terminal app mock --- */
 /* Exactly the palette in crates/tui/src/theme.rs. */
@@ -770,6 +850,8 @@ p  { margin: 0; text-wrap: pretty; }
 }
 .term__grid i { font-style: normal; }
 .term__grid > span:nth-child(even) { justify-content: flex-end; }
+.term__grid > span { cursor: pointer; }
+.term__grid > span:hover { background: rgb(255 255 255 / 5%); }
 
 /* The cell under the cursor is highlighted on exactly the columns `Space`
    toggles, which is what Theme::selected() does. */
@@ -780,9 +862,57 @@ p  { margin: 0; text-wrap: pretty; }
   padding-inline: 2px;
   font-weight: 700;
 }
+/* Theme::selected() paints the hint white too, so a focused cell never shows
+   accent-on-accent. */
 .term__grid > span.is-focus i,
 .term__grid > span.is-focus .t-acc,
-.term__grid > span.is-focus .t-dim { color: #fff; }
+.term__grid > span.is-focus .t-dim,
+.term__grid > span.is-focus .t-on,
+.term__grid > span.is-focus .t-warn { color: #fff; }
+
+.term__frame:focus-visible { outline: 2px solid var(--tui-accent); outline-offset: 3px; }
+
+/* The subcategory overlay: a rounded block like every other TUI frame, with
+   its key hints on the bottom border the way the real popup draws them. */
+.term__pop {
+  margin-top: 8px;
+  position: relative;
+  border: 1px solid var(--tui-border);
+  border-radius: 6px;
+  padding: 15px 10px 6px;
+}
+.term__pop-title {
+  position: absolute;
+  top: -8px;
+  left: 10px;
+  padding-inline: 4px;
+  background: var(--tui-bg);
+}
+.term__pop-list { display: grid; gap: 1px; font-size: 0.6875rem; }
+.term__pop-list button {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5em;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: inherit;
+  text-align: left;
+  padding: 0;
+  cursor: pointer;
+}
+.term__pop-list button:focus-visible { outline: 1px solid var(--tui-accent); outline-offset: 1px; }
+.term__pop-foot {
+  margin-top: 6px;
+  padding-top: 5px;
+  border-top: 1px solid var(--tui-border);
+  font-size: 0.625rem;
+  color: var(--tui-dim);
+  display: flex;
+  justify-content: space-between;
+}
 
 .term__btnrow {
   margin-top: 8px;

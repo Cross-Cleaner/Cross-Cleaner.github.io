@@ -362,31 +362,36 @@
             </div>
 
             <div class="win__body">
-              <div class="win__cols">
-                <div class="win__col">
+              <div class="win__cols" id="gui-cols">
+                <div class="win__col" id="gui-left">
                   <span class="gcell"><i class="gchk is-on"></i>Cache (71)</span>
-                  <span class="gcell"><i class="gchk is-part"></i>Logs (266)</span>
+                  <span class="gcell"><i class="gchk"></i>Logs (266)</span>
                   <span class="gcell"><i class="gchk"></i>Crashes (24)</span>
-                  <span class="gcell"><i class="gchk is-on"></i>Documentation (211)<i class="gmenu"></i></span>
+                  <span class="gcell"><i class="gchk is-on"></i>Documentation (211)<svg class="gmenu" aria-hidden="true"><use href="#i-menu"></use></svg></span>
                   <span class="gcell"><i class="gchk"></i>Backups (3)</span>
-                  <span class="gcell"><i class="gchk is-part"></i>LastActivity (11)<i class="gmenu"></i></span>
+                  <span class="gcell"><i class="gchk is-part"></i>LastActivity (11)<svg class="gmenu" aria-hidden="true"><use href="#i-menu"></use></svg></span>
                 </div>
-                <div class="win__col win__col--rtl">
-                  <span class="gcell"><i class="gmenu"></i><i class="gchk"></i>Accounts (14)</span>
-                  <span class="gcell"><i class="gmenu"></i><i class="gchk is-on"></i>Browser (42)</span>
+                <div class="win__col win__col--rtl" id="gui-right">
+                  <span class="gcell"><i class="gchk"></i>Accounts (14)</span>
+                  <span class="gcell"><svg class="gmenu" aria-hidden="true"><use href="#i-menu"></use></svg><i class="gchk is-on"></i>Browser (42)</span>
                   <span class="gcell"><i class="gchk"></i>Cheats (26)</span>
                   <span class="gcell"><i class="gchk is-on"></i>Downloads (1)</span>
-                  <span class="gcell"><i class="gmenu"></i><i class="gchk"></i>Game (34)</span>
+                  <span class="gcell"><svg class="gmenu" aria-hidden="true"><use href="#i-menu"></use></svg><i class="gchk"></i>Game (34)</span>
                   <span class="gcell"><i class="gchk"></i>Images (23)</span>
                 </div>
               </div>
             </div>
 
-            <div class="win__foot"><span class="wbtn">Next</span></div>
+            <div class="win__foot"><button class="wbtn" type="button" id="gui-next">Next</button></div>
           </div>
+          <!-- Anchored next to the button that opened it, like
+               egui::Popup::menu; kept outside .win so it is not clipped by
+               the window's rounded corners. -->
+          <div class="gui-pop" id="gui-pop" role="dialog" aria-label="Subcategories" hidden></div>
           <figcaption>
-            Window app &mdash; Categories. A half-filled box means part of the
-            category is picked; the <span class="gmenu gmenu--inline"></span> button opens its subcategories.
+            Window app &mdash; Categories, and it is live: click a box, or the
+            <svg class="gmenu gmenu--inline" aria-hidden="true"><use href="#i-menu"></use></svg>
+            button, to open its subcategories.
           </figcaption>
         </figure>
 
@@ -400,36 +405,27 @@
               <b>Cross Cleaner</b><span class="t-dim">&middot; Cross Cleaner v2.0.4</span>
               <span class="t-acc">[Categories]</span>
             </div>
-            <div class="term__frame">
-              <div class="term__title"><span class="t-dim">Categories (4/12 selected)</span></div>
+            <div class="term__frame" id="tui-frame" tabindex="0" role="application"
+               aria-label="Terminal app category grid. Arrow keys move, space selects, enter opens subcategories.">
+              <div class="term__title"><span class="t-dim" id="tui-count">Categories (5/12 selected)</span></div>
               <!-- Odd cells are the left column (marker, checkbox, label, then
                    the subcategory arrow); even cells are its mirror, so the
                    checkbox lands against the right edge and the arrow comes
                    first. That is cell_spans() in crates/tui/src/pages/main.rs. -->
-              <div class="term__grid">
-                <span class="is-focus"><i class="t-on">&#9656;[x]</i> Cache (71)</span>
-                <span>Logs (266) <i class="t-warn">[-]</i></span>
-                <span><i class="t-dim">[ ]</i> Crashes (24)</span>
-                <span><span class="t-acc">4 &#8592;</span> Documentation (211) <i class="t-on">[x]</i></span>
-                <span><i class="t-dim">[ ]</i> Backups (3)</span>
-                <span><span class="t-dim">3 &#8592;</span> LastActivity (11) <i class="t-warn">[-]</i></span>
-                <span><i class="t-dim">[ ]</i> Accounts (14)</span>
-                <span><span class="t-acc">3 &#8592;</span> Browser (42) <i class="t-on">[x]</i></span>
-                <span><i class="t-dim">[ ]</i> Cheats (26)</span>
-                <span>Downloads (1) <i class="t-on">[x]</i></span>
-                <span><i class="t-dim">[ ]</i> Game (34) <span class="t-dim">&#8594; 0</span></span>
-                <span>Images (23) <i class="t-dim">[ ]</i></span>
-              </div>
+              <div class="term__grid" id="tui-grid"></div>
               <div class="term__btnrow"><span class="term__btn"> Next </span></div>
             </div>
-            <div class="term__foot t-dim">
+            <div class="term__foot t-dim" id="tui-foot">
               &#8593;&#8595; row &middot; tab column &middot; space select &middot; enter subs &middot;
               n next &middot; s settings &middot; ? changelog &middot; G repo &middot; q quit
             </div>
+            <div class="term__pop" id="tui-pop" hidden></div>
           </div>
           <figcaption>
             Terminal app &mdash; the same page and the same database, drawn for a
-            character grid.
+            character grid. Click it, or focus it and use
+            <kbd>&#8593;</kbd><kbd>&#8595;</kbd><kbd>&#8592;</kbd><kbd>&#8594;</kbd>,
+            <kbd>space</kbd> and <kbd>enter</kbd>.
           </figcaption>
         </figure>
       </div>
@@ -530,5 +526,6 @@
 <!-- Classic script on purpose: a module script is blocked on file:// origins,
      and the page has to work when index.html is opened straight from disk. -->
 <script src="assets/js/main.js" defer></script>
+<script src="assets/js/demo.js" defer></script>
 </body>
 </html>

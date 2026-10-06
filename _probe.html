@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="assets/css/styles.css">
+<style>body{background:#7a7a7a;padding:20px;display:inline-block}
+.mock{position:relative}
+.win{width:520px}
+</style></head><body>
+<div class="mock" id="m">
+  <div class="win">
+    <div class="win__bar"><span class="win__title">Cross Cleaner v2.0.4</span>
+      <span class="win__controls"><span class="win__sep"></span><span class="win__glyph">&#10005;</span></span></div>
+    <div class="win__body"><div class="win__cols">
+      <div class="win__col"><span class="gcell"><i class="gchk is-part"></i>LastActivity (11)</span></div>
+      <div class="win__col win__col--rtl"></div>
+    </div></div>
+    <div class="win__foot"><button class="wbtn" type="button">Next</button></div>
+  </div>
+  <div class="gui-pop" id="p">
+    <h4>LastActivity</h4>
+    <ul>
+      <li><button><i class="gchk is-on"></i><span>History</span><span class="gcount">11 entries</span></button></li>
+      <li><button><i class="gchk"></i><span>Recent Started Apps</span><span class="gcount">11 entries</span></button></li>
+      <li><button><i class="gchk"></i><span>Connected Devices</span><span class="gcount">11 entries</span></button></li>
+      <li><button><i class="gchk"></i><span>Uncategorized</span><span class="gcount">11 entries</span></button></li>
+    </ul>
+  </div>
+</div>
+<script>
+var p = document.getElementById("p"), m = document.getElementById("m");
+var mb = m.getBoundingClientRect();
+p.style.left = "20px"; p.style.top = "70px";
+var rows = [].slice.call(p.querySelectorAll("button")).map(function(b){
+  var lbl = b.querySelectorAll("span")[0].getBoundingClientRect();
+  var cnt = b.querySelector(".gcount").getBoundingClientRect();
+  var bb = b.getBoundingClientRect();
+  return b.querySelectorAll("span")[0].textContent + ": countGap=" + Math.round(cnt.left - lbl.right) +
+         "px oneLine=" + (Math.round(bb.height) <= 26) + " h=" + Math.round(bb.height);
+});
+document.title = "POPUP " + Math.round(p.getBoundingClientRect().width) + "px";
+var out = document.createElement("pre");
+out.style.cssText = "background:#000;color:#0f0;font:13px monospace;padding:8px;margin-top:12px;display:block;width:max-content";
+out.textContent = "popup width = " + Math.round(p.getBoundingClientRect().width) + "px\n" + rows.join("\n");
+document.body.appendChild(out);
+</script>
+</body></html>
