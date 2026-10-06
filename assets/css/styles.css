@@ -592,8 +592,16 @@ p  { margin: 0; text-wrap: pretty; }
   align-items: start;
 }
 
-/* Positioning context for the subcategory popup. */
-.mock { margin: 0; display: grid; gap: 0.875rem; position: relative; }
+/* Positioning context for the subcategory popup. `min-width: 0` lets the
+   gallery column shrink below the mock's intrinsic width instead of forcing it
+   wider and overlapping its neighbour. */
+.mock {
+  margin: 0;
+  display: grid;
+  gap: 0.875rem;
+  position: relative;
+  min-width: 0;
+}
 .mock figcaption {
   text-align: center;
   font-size: 0.8125rem;
@@ -620,6 +628,16 @@ p  { margin: 0; text-wrap: pretty; }
 }
 
 .win {
+  /* The real window keeps one size across pages — the program list scrolls
+     inside it rather than the window growing (the results page is the only
+     place the app resizes). The size is a maximum rather than a fixed width on
+     purpose: a hard `width` would set the gallery column's min-content and push
+     the next mock on top of this one. */
+  width: 100%;
+  max-width: 560px;
+  height: 430px;
+  display: flex;
+  flex-direction: column;
   background: var(--egui-window);
   border: 2px solid var(--egui-stroke);
   border-radius: 6px;
@@ -627,8 +645,39 @@ p  { margin: 0; text-wrap: pretty; }
   box-shadow: 0 14px 34px -22px rgb(0 0 0 / 70%);
 }
 
+/* Bar and footer are fixed; the middle column takes what is left, and only the
+   body scrolls. */
+.win__main {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.win__head {
+  flex: 0 0 auto;
+  padding: 8px 12px 0;
+}
+.win__head:empty { display: none; }
+.win__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 10px 12px 6px;
+  /* A hairline scrollbar, so it reads as scrollable rather than clipped. */
+  scrollbar-width: thin;
+  scrollbar-color: var(--egui-stroke) transparent;
+}
+.win__body::-webkit-scrollbar { width: 8px; }
+.win__body::-webkit-scrollbar-track { background: transparent; }
+.win__body::-webkit-scrollbar-thumb {
+  background: var(--egui-stroke);
+  border-radius: var(--md-shape-full);
+}
+
 /* The 32px custom title bar from crates/gui/src/title_bar.rs. */
 .win__bar {
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -726,6 +775,7 @@ p  { margin: 0; text-wrap: pretty; }
 .gcell.is-on { color: #fff; }
 
 .win__foot { padding: 6px 12px 12px; }
+
 .wbtn {
   display: block;
   width: 100%;
@@ -740,6 +790,52 @@ p  { margin: 0; text-wrap: pretty; }
   cursor: pointer;
 }
 .wbtn:hover { background: #474747; }
+
+/* Back arrow in the title bar, shown only where Page::has_back() is true. */
+.win__back {
+  border: 0;
+  background: transparent;
+  color: var(--egui-dim);
+  font: inherit;
+  font-size: 15px;
+  line-height: 1;
+  padding: 2px 6px 2px 0;
+  margin-right: 4px;
+  cursor: pointer;
+}
+.win__back:hover { color: var(--egui-text); }
+.win__back[hidden] { display: none; }
+
+/* Program page: centred heading, separator, search field, two columns. */
+.gui-heading {
+  margin: 2px 0 6px;
+  text-align: center;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--egui-text);
+}
+.gui-sep { height: 1px; margin: 0 0 8px; border: 0; background: var(--egui-stroke); }
+
+.gui-search { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.gui-search label { color: var(--egui-text); flex-shrink: 0; }
+.gui-search__field {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 20px;
+  padding: 0 6px;
+  background: var(--egui-window);
+  border: 1px solid var(--egui-stroke);
+  border-radius: 3px;
+  color: var(--egui-text);
+  font: inherit;
+  font-size: 0.8125rem;
+}
+.gui-search__field:focus { outline: none; border-color: var(--egui-accent); }
+
+.gui-list { display: grid; grid-template-columns: 1fr 1fr; gap: 0 18px; }
+.gui-list__col { display: grid; gap: 7px; align-content: start; }
+.gui-list__col--rtl { justify-items: end; }
+.gui-empty { color: var(--egui-dim); font-size: 0.8125rem; }
 
 /* Subcategory popup, anchored beside the button that opened it like
    egui::Popup::menu. It sits outside .win so the window's rounded corners and
@@ -791,8 +887,12 @@ p  { margin: 0; text-wrap: pretty; }
 /* --- Terminal app mock --- */
 /* Exactly the palette in crates/tui/src/theme.rs. */
 .term {
-  /* Positioning context for the centred overlay. */
+  /* A terminal keeps its size and scrolls whatever does not fit, so this one
+     does too: fixed height, and the list inside the frame scrolls. */
   position: relative;
+  height: 330px;
+  display: flex;
+  flex-direction: column;
   --tui-bg: rgb(24, 24, 28);
   --tui-panel: rgb(32, 32, 38);
   --tui-border: rgb(72, 72, 82);
@@ -821,10 +921,29 @@ p  { margin: 0; text-wrap: pretty; }
 /* Rounded border block, as ratatui draws it with BorderType::Rounded. */
 .term__frame {
   position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
   border: 1px solid var(--tui-border);
   border-radius: 6px;
   padding: 15px 10px 8px;
 }
+
+/* The list is the only part that scrolls; the title and the pinned button stay. */
+#tui-grid {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--tui-border) transparent;
+}
+#tui-grid::-webkit-scrollbar { width: 8px; }
+#tui-grid::-webkit-scrollbar-track { background: transparent; }
+#tui-grid::-webkit-scrollbar-thumb { background: var(--tui-border); border-radius: var(--md-shape-full); }
+
+.term__head, .term__foot { flex: 0 0 auto; }
 .term__title {
   position: absolute;
   top: -8px;
@@ -840,6 +959,11 @@ p  { margin: 0; text-wrap: pretty; }
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 1px 14px;
+  /* Now that the frame scrolls, this container is taller than its rows. Grid's
+     default `align-content: stretch` would spread the leftover height over the
+     rows, which opened a gap between them and stretched the focused cell's
+     highlight across two rows. Rows keep their natural height instead. */
+  align-content: start;
   font-size: 0.6875rem;
 }
 .term__grid > span {
@@ -952,11 +1076,14 @@ p  { margin: 0; text-wrap: pretty; }
 }
 
 .term__btnrow {
+  flex: 0 0 auto;
   margin-top: 8px;
   padding: 3px 6px;
   background: var(--tui-panel);
   border-radius: 4px;
+  cursor: pointer;
 }
+.term__btnrow:hover { background: #2a2a32; }
 .term__btn {
   background: var(--tui-accent);
   color: #fff;
@@ -964,6 +1091,52 @@ p  { margin: 0; text-wrap: pretty; }
   padding-inline: 0.5em;
   border-radius: 3px;
 }
+
+/* Program page: search field, then a plain list of rows inside the frame. */
+.term__search {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25em;
+  padding-bottom: 6px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--tui-border);
+  white-space: nowrap;
+  overflow: hidden;
+}
+.term__search b { font-weight: 700; }
+.t-caret { color: var(--tui-accent); font-weight: 700; }
+
+.term__list { display: grid; gap: 1px; align-content: start; font-size: 0.6875rem; }
+.term__list .term__title {
+  position: static;
+  padding: 2px 0;
+  margin-bottom: 2px;
+  border-bottom: 1px solid var(--tui-border);
+}
+.term__list .term__title span { background: transparent; }
+
+.term__row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35em;
+  padding: 0 2px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.term__row i { font-style: normal; }
+.term__row:hover { background: rgb(255 255 255 / 5%); }
+.term__row.is-focus {
+  background: var(--tui-accent);
+  color: #fff;
+  font-weight: 700;
+}
+.term__row.is-focus i,
+.term__row.is-focus .t-acc,
+.term__row.is-focus .t-dim,
+.term__row.is-focus .t-on,
+.term__row.is-focus .t-warn { color: #fff; }
+
+.term__empty { padding: 4px 2px; }
 
 .term__foot {
   margin-top: 8px;

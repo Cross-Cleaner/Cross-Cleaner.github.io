@@ -60,6 +60,48 @@
 
   var COLUMNS = 2; /* CATEGORY_COLUMNS in crates/appcore/src/app.rs */
 
+  /* Programs per (category, subcategory), taken from
+     crates/database/windows_database.json and capped at eight per entry so the
+     page stays light. build_program_list() walks the database and keeps an
+     entry when its category *and* its subcategory are both selected, so this
+     table is what decides the program list. */
+  var PROGRAMS = {
+    Cache: { "": ["Albion Online", "ATLauncher", "Badlion Client", "Brave Browser", "CollapseLoader", "CurseForge", "Cursor", "DeepL"] },
+    Logs: { "": ["1Password", "4uKey for Android", "Amnezia VPN", "Anaconda", "AnarchyLoader", "Atom", "Audacity", "Avast"] },
+    Crashes: { "": ["Arizona Games Launcher", "ATLauncher", "Badlion Client", "Cristalix", "CurseForge", "Discord", "Genshin Impact", "GribLand"] },
+    Documentation: {
+      "": ["7-Zip", "Adobe", "AltSnap", "ASIO4ALL v2", "Bulk Crap Uninstaller", "Cheat Engine", "Everything", "FreeCAD"],
+      "Change logs": ["BoxedAppPacker", "Cursor", "Enigma Virtual Box", "Everything", "HomeBank", "Notepad++", "Process Hacker 2"],
+      "Examples": ["FreeCAD"],
+      "Licenses": ["7-Zip", "AltSnap", "Amnezia VPN", "Anaconda", "ATLauncher", "Audacity", "Avast", "Badlion Client"],
+      "News": ["InkSpace", "Salwyrr Launcher", "VLC"],
+      "Signatures": ["Mem Reduct", "MinGW", "Process Hacker 2", "Steam", "SystemInformer"],
+    },
+    Backups: { "": ["Namida", "ShareX", "Windhawk"] },
+    LastActivity: {
+      "": ["Everything", "Flow Launcher", "Namida", "rgitui", "Windows", "Windows PowerShell"],
+      "Connected Devices": ["Windows"],
+      "Conversations": ["OpenCode"],
+      "History": ["Everything", "Flow Launcher", "Namida", "rgitui", "Windows", "Windows PowerShell"],
+      "Recent Started Apps": ["Windows"],
+    },
+    Accounts: { "": ["ATLauncher", "Badlion Client", "CollapseLoader", "CurseForge", "GribLand", "Lunar Client", "Modrinth", "MultiMC"] },
+    Browser: {
+      "": ["Brave Browser", "Google Chrome", "Helium Browser", "LibreWolf", "Microsoft Edge", "Mozilla Firefox", "Opera"],
+      "Cookies": ["Brave Browser", "Google Chrome", "Helium Browser", "LibreWolf", "Microsoft Edge", "Mozilla Firefox", "Opera"],
+      "History": ["Brave Browser", "Google Chrome", "Helium Browser", "LibreWolf", "Microsoft Edge", "Mozilla Firefox", "Opera"],
+      "Passwords": ["Brave Browser", "Google Chrome", "Helium Browser", "Opera", "Opera GX", "Thorium"],
+    },
+    Cheats: { "": ["AnarchyLoader", "ATLauncher", "Badlion Client", "Cheat Engine", "CollapseLoader", "CurseForge", "ExecHack", "Fatality"] },
+    Downloads: { "": ["Windows"] },
+    Game: {
+      "": ["ATLauncher", "Badlion Client", "Borderlands 2", "Cossacks 3", "Cristalix", "CurseForge", "GribLand"],
+      "Saves": ["ATLauncher", "Badlion Client", "Borderlands 2", "Cossacks 3", "Cristalix", "CubixWorld", "CurseForge", "GribLand"],
+      "Settings": ["Borderlands 2", "Cossacks 3", "Counter-Strike Global Offensive", "Dota 2", "Rust", "Terraria", "Unturned", "Void Train"],
+    },
+    Images: { "": ["Arizona Games Launcher", "ATLauncher", "Badlion Client", "BlueStacks 5", "Cristalix", "CurseForge", "GribLand", "GTA San Andreas"] },
+  };
+
   /* The opening state, so the demo starts mid-selection the way the static
      markup does. Note that a leaf category — one with no subcategories — can
      only ever be checked or unchecked: its selected set is just "Uncategorized",
@@ -155,6 +197,77 @@
     return (name === "" ? "Uncategorized" : name) + " (" + count + ")";
   }
 
+  /* ── Program list ──────────────────────────────────────────────────────
+     build_program_list() in crates/appcore/src/app.rs: every database entry
+     whose category *and* subcategory are selected contributes its program, a
+     program seen under several categories is merged into one row, and the list
+     is sorted by name with programs checked by default. Returns false when
+     nothing is selected, which is what makes `Next` do nothing. */
+
+  function hasSelection() {
+    return CATEGORIES.some(function (cat) {
+      return !isUnchecked(cat);
+    });
+  }
+
+  function buildProgramList() {
+    if (!hasSelection()) return [];
+
+    var byName = {};
+    CATEGORIES.forEach(function (cat) {
+      if (isUnchecked(cat)) return;
+      var table = PROGRAMS[cat.name] || {};
+      entriesOf(cat).forEach(function (entry) {
+        // Only the selected subcategories contribute.
+        if (cat.selected.indexOf(entry[0]) === -1) return;
+        (table[entry[0]] || []).forEach(function (program) {
+          if (!byName[program]) byName[program] = [];
+          if (byName[program].indexOf(cat.name) === -1) byName[program].push(cat.name);
+        });
+      });
+    });
+
+    return Object.keys(byName)
+      .sort()
+      .map(function (name) {
+        return {
+          name: name,
+          categories: byName[name].sort(),
+          // Program checkboxes start checked; `disabled` are the categories the
+          // user turned off for this one program.
+          disabled: [],
+        };
+      });
+  }
+
+  /** ProgramState::is_program_checked — off only when every category is off. */
+  function programChecked(program) {
+    return program.disabled.length === 0;
+  }
+
+  /** ProgramState::is_program_indeterminate — some but not all categories off. */
+  function programIndeterminate(program) {
+    return program.disabled.length > 0 && program.disabled.length < program.categories.length;
+  }
+
+  function toggleProgram(program) {
+    if (programChecked(program) || programIndeterminate(program)) {
+      program.disabled = program.categories.slice();
+      return false;
+    }
+    program.disabled = [];
+    return true;
+  }
+
+  /** The rows the search leaves visible, matching AppState::set_search. */
+  function filterPrograms(list, query) {
+    if (!query) return list;
+    var needle = query.toLowerCase();
+    return list.filter(function (p) {
+      return p.name.toLowerCase().indexOf(needle) !== -1;
+    });
+  }
+
   function el(tag, className, text) {
     var node = document.createElement(tag);
     if (className) node.className = className;
@@ -177,6 +290,56 @@
 
   var guiPop = document.getElementById("gui-pop");
   var guiPopIndex = -1;
+  /* Page state, mirroring AppState::current_page. */
+  var guiPage = "categories";
+  var tuiPage = "categories";
+  var programs = [];
+  var guiSearch = "";
+  var tuiSearch = "";
+  var tuiSearchEditing = false;
+  var tuiProgramCursor = 0;
+  var toast = null;
+
+  function setPage(which, page) {
+    if (which === "gui") guiPage = page;
+    else tuiPage = page;
+    // Leaving the program page drops the list, the way the real app rebuilds it
+    // from the category selection every time `Next` is pressed.
+    if (page === "categories") {
+      guiSearch = "";
+      tuiSearch = "";
+      tuiSearchEditing = false;
+      tuiProgramCursor = 0;
+      programs = [];
+    }
+  }
+
+  /** Transient status line, which replaces the footer's key hints. */
+  function showToast(message, kind) {
+    toast = { message: message, kind: kind || "warn", until: Date.now() + 2500 };
+    // Nothing else would re-render afterwards, so drop it on a timer.
+    window.setTimeout(function () {
+      if (toast && Date.now() >= toast.until) {
+        toast = null;
+        renderChrome();
+      }
+    }, 2600);
+  }
+
+  /* ── Next / Start Cleaning ─────────────────────────────────────────────
+     `Next` is build_program_list(): it returns false with nothing selected, and
+     the terminal app answers that with a toast rather than changing page. */
+
+  function goToPrograms() {
+    var list = buildProgramList();
+    if (!list.length) {
+      showToast("Select at least one category first.");
+      renderAll();
+      return false;
+    }
+    programs = list;
+    return true;
+  }
 
   /** Checkbox state as the app paints it: on, partial, or empty. */
   function checkboxClass(cat) {
@@ -190,13 +353,28 @@
     return on ? "gchk is-on" : "gchk";
   }
 
-  function renderGui() {
-    var left = document.getElementById("gui-left");
-    var right = document.getElementById("gui-right");
-    if (!left || !right) return;
+  function renderGuiCategories() {
+    var body = document.getElementById("gui-body");
+    var head = document.getElementById("gui-head");
+    if (!body) return;
 
-    left.textContent = "";
-    right.textContent = "";
+    // The pages take turns over the same containers, so each one rebuilds what
+    // it needs instead of relying on markup that may have been thrown away by
+    // the other page.
+    head.textContent = "";
+    body.textContent = "";
+
+    var cols = el("div", "win__cols");
+    var left = el("div", "win__col");
+    var right = el("div", "win__col win__col--rtl");
+    // Keep the ids the static markup had, so anything reaching for the columns
+    // still finds them after a page switch.
+    cols.id = "gui-cols";
+    left.id = "gui-left";
+    right.id = "gui-right";
+    cols.appendChild(left);
+    cols.appendChild(right);
+    body.appendChild(cols);
 
     CATEGORIES.forEach(function (cat, index) {
       // The rightmost column is laid out right-to-left, so its checkbox sits
@@ -253,6 +431,90 @@
 
       (rightmost ? right : left).appendChild(cell);
     });
+  }
+
+  /** The window app's program page: crates/gui/src/pages/program_selection.rs —
+      centred heading, a search field, two columns of program checkboxes and a
+      pinned "Start Cleaning" button. */
+  function renderGuiPrograms() {
+    var body = document.getElementById("gui-body");
+    var head = document.getElementById("gui-head");
+    if (!body) return;
+
+    // The heading, separator and search sit above the scrolling list, so they
+    // go in the fixed header; only the checkbox list scrolls below it.
+    head.textContent = "";
+    head.appendChild(el("h4", "gui-heading", "Select Programs to Clean"));
+    head.appendChild(el("hr", "gui-sep"));
+    body.textContent = "";
+
+    var search = el("div", "gui-search");
+    search.appendChild(el("label", null, "Search:"));
+    var input = el("input", "gui-search__field");
+    input.type = "search";
+    input.value = guiSearch;
+    input.placeholder = "";
+    input.setAttribute("aria-label", "Search programs");
+    input.addEventListener("input", function () {
+      guiSearch = input.value;
+      renderGuiPrograms();
+      var again = document.querySelector(".gui-search__field");
+      if (again) {
+        again.focus();
+        again.setSelectionRange(again.value.length, again.value.length);
+      }
+    });
+    search.appendChild(input);
+    head.appendChild(search);
+
+    var shown = filterPrograms(programs, guiSearch);
+    var list = el("div", "gui-list");
+    if (shown.length === 0) {
+      list.appendChild(el("p", "gui-empty", guiSearch ? "No program matches the search." : "No programs for the selected categories."));
+      body.appendChild(list);
+      return;
+    }
+
+    var colA = el("div", "gui-list__col");
+    var colB = el("div", "gui-list__col gui-list__col--rtl");
+    shown.forEach(function (program, i) {
+      // Same right-to-left trick as the category grid.
+      var rightmost = i % COLUMNS === COLUMNS - 1;
+      var cell = el("button", "gcell");
+      cell.type = "button";
+      cell.setAttribute("aria-pressed", programChecked(program) ? "true" : programIndeterminate(program) ? "mixed" : "false");
+
+      var menu = null;
+      // Only programs in several categories get the overlay marker.
+      if (program.categories.length > 1) {
+        menu = el("i", "gmenu-btn");
+        menu.appendChild(menuIcon());
+        menu.setAttribute("role", "button");
+        menu.tabIndex = 0;
+        menu.setAttribute("aria-label", "Categories of " + program.name);
+      }
+
+      if (rightmost && menu) cell.appendChild(menu);
+      cell.appendChild(el("i", programChecked(program) ? "gchk is-on" : programIndeterminate(program) ? "gchk is-part" : "gchk"));
+      cell.appendChild(el("span", null, program.name));
+      if (!rightmost && menu) cell.appendChild(menu);
+
+      cell.addEventListener("click", function () {
+        toggleProgram(program);
+        renderGuiPrograms();
+      });
+      (rightmost ? colB : colA).appendChild(cell);
+    });
+
+    list.appendChild(colA);
+    list.appendChild(colB);
+    body.appendChild(list);
+  }
+
+  /** Draws whichever page the window mock is on. */
+  function renderGui() {
+    if (guiPage === "programs") renderGuiPrograms();
+    else renderGuiCategories();
   }
 
   function openGuiPop(index, anchor) {
@@ -341,9 +603,12 @@
     return cat.selected.length > 0 ? "t-acc" : "t-dim";
   }
 
-  function renderTui() {
+  function renderTuiCategories() {
     if (!tuiGrid) return;
 
+    // The program page switches this container to `term__list`; it has to be
+    // restored, or the category grid keeps the wrong styling.
+    tuiGrid.className = "term__grid";
     tuiGrid.textContent = "";
     CATEGORIES.forEach(function (cat, index) {
       var right = index % COLUMNS === COLUMNS - 1;
@@ -383,6 +648,59 @@
     if (tuiCount) {
       tuiCount.textContent = "Categories (" + selectedCount() + "/" + CATEGORIES.length + " selected)";
     }
+  }
+
+  /** The terminal app's program page: crates/tui/src/pages/program_selection.rs
+      — a search field, a "Programs (n/m shown)" block and a pinned
+      "Start Cleaning" button. */
+  function renderTuiPrograms() {
+    if (!tuiGrid) return;
+
+    var shown = filterPrograms(programs, tuiSearch);
+
+    tuiGrid.textContent = "";
+    tuiGrid.className = "term__list";
+
+    // Search field: the query, a caret while editing, and the page's hints.
+    var search = el("div", "term__search");
+    search.appendChild(el("b", "t-dim", " Search: "));
+    if (tuiSearch) search.appendChild(el("span", null, tuiSearch));
+    else search.appendChild(el("span", "t-dim", "type a program name…"));
+    search.appendChild(el("span", "t-caret", tuiSearchEditing ? "▏" : "  "));
+    search.appendChild(el("span", "t-dim", tuiSearchEditing ? "  esc/enter done · backspace delete" : "  / to search · u to clear"));
+    tuiGrid.appendChild(search);
+
+    if (shown.length === 0) {
+      // empty_hint() explains an empty list instead of drawing a blank box.
+      tuiGrid.appendChild(el("p", "term__empty t-dim", tuiSearch ? "No program matches the search." : "No programs for the selected categories."));
+      return;
+    }
+
+    shown.forEach(function (program, i) {
+      var row = el("div", "term__row" + (i === tuiProgramCursor ? " is-focus" : ""));
+      row.setAttribute("data-program", program.name);
+      var mark = programChecked(program) ? "[x]" : programIndeterminate(program) ? "[-]" : "[ ]";
+      var tone = programChecked(program) ? "t-on" : programIndeterminate(program) ? "t-warn" : "t-dim";
+      row.appendChild(el("i", tone, mark));
+      row.appendChild(el("span", null, " " + program.name));
+      // Only programs in several categories carry the arrow, as program_items()
+      // does; it turns warn-coloured once a category is excluded.
+      if (program.categories.length > 1) {
+        row.appendChild(el("span", program.disabled.length ? "t-warn" : "t-dim", "  → " + program.categories.length));
+      }
+      row.addEventListener("click", function () {
+        tuiProgramCursor = i;
+        toggleProgram(program);
+        renderTuiPrograms();
+      });
+      tuiGrid.appendChild(row);
+    });
+  }
+
+  /** Draws whichever page the terminal mock is on. */
+  function renderTui() {
+    if (tuiPage === "programs") renderTuiPrograms();
+    else renderTuiCategories();
   }
 
   /** Opens the overlay for `index`, the way `enter subs` does. */
@@ -453,6 +771,14 @@
     if (cell) cell.scrollIntoView({ block: "nearest" });
   }
 
+  /** move_list() on the program page: wraps at both ends. */
+  function moveProgramCursor(delta) {
+    var shown = filterPrograms(programs, tuiSearch);
+    if (shown.length === 0) return;
+    tuiProgramCursor = ((tuiProgramCursor + delta) % shown.length + shown.length) % shown.length;
+    renderTuiPrograms();
+  }
+
   /* Key bindings, following footer_hints() in crates/tui/src/app.rs:
        ↑↓ row   · tab column   · space select   · enter subs
      The sideways arrows are bound to the overlay as well, which is the `→ cats`
@@ -489,15 +815,29 @@
         return;
       }
 
+      /* While the search field is focused, printable characters go into the query
+       and the single-letter bindings stay out of the way — the app's own hint
+       reads "/ to search · u to clear", and clearing only applies once the field
+       has been released. */
+      if (tuiPage === "programs" && tuiSearchEditing && event.key.length === 1 && !event.ctrlKey && !event.metaKey) {
+        tuiSearch += event.key;
+        renderTui();
+        event.preventDefault();
+        return;
+      }
+
       switch (event.key) {
         case "ArrowUp":
-          moveCursor(-COLUMNS);
+          if (tuiPage === "programs") moveProgramCursor(-1);
+          else moveCursor(-COLUMNS);
           break;
         case "ArrowDown":
-          moveCursor(COLUMNS);
+          if (tuiPage === "programs") moveProgramCursor(1);
+          else moveCursor(COLUMNS);
           break;
         case "ArrowLeft":
         case "ArrowRight": {
+          if (tuiPage === "programs") break;
           // Only categories that actually have entries have something to show;
           // the arrow then just moves the cursor, as on the program page.
           if (CATEGORIES[cursor].subs.length > 0) openTuiPop(cursor);
@@ -505,18 +845,81 @@
           break;
         }
         case "Tab":
-          moveCursor(event.shiftKey ? -1 : 1);
+          if (tuiPage === "categories") moveCursor(event.shiftKey ? -1 : 1);
           break;
         case " ":
         case "Spacebar":
-          toggleCategory(CATEGORIES[cursor]);
+          if (tuiPage === "programs") {
+            var shown = filterPrograms(programs, tuiSearch);
+            if (shown[tuiProgramCursor]) toggleProgram(shown[tuiProgramCursor]);
+          } else {
+            toggleCategory(CATEGORIES[cursor]);
+          }
           renderAll();
           break;
         case "Enter":
-          if (CATEGORIES[cursor].subs.length > 0) openTuiPop(cursor);
-          else toggleCategory(CATEGORIES[cursor]);
-          renderTui();
+          if (tuiPage === "categories") {
+            if (CATEGORIES[cursor].subs.length > 0) openTuiPop(cursor);
+            else toggleCategory(CATEGORIES[cursor]);
+            renderTui();
+          } else if (tuiSearchEditing) {
+            tuiSearchEditing = false;
+            renderTui();
+          }
           break;
+        case "Escape":
+          // esc back, and esc also leaves search editing first.
+          if (tuiSearchEditing) {
+            tuiSearchEditing = false;
+            renderTui();
+          } else if (tuiPage === "programs") {
+            setPage("tui", "categories");
+            renderAll();
+          }
+          break;
+        case "Backspace":
+          if (tuiPage === "programs" && tuiSearchEditing && tuiSearch.length) {
+            tuiSearch = tuiSearch.slice(0, -1);
+            renderTui();
+            break;
+          }
+          return;
+        case "/":
+          if (tuiPage === "programs") {
+            tuiSearchEditing = true;
+            renderTui();
+            break;
+          }
+          return;
+        case "u":
+          if (tuiPage === "programs" && !tuiSearchEditing && tuiSearch) {
+            tuiSearch = "";
+            renderTui();
+            break;
+          }
+          return;
+        case "n":
+        case "N":
+          if (tuiPage === "categories" && !tuiSearchEditing) {
+            if (goToPrograms()) setPage("tui", "programs");
+            renderAll();
+            break;
+          }
+          return;
+        case "s":
+        case "S":
+          if (tuiSearchEditing) return;
+          if (tuiPage === "categories") {
+            showToast("Settings is not part of this demo.");
+            renderAll();
+            break;
+          }
+          if (tuiPage === "programs") {
+            showToast("Cleaning is not simulated here.");
+            renderAll();
+            break;
+          }
+          return;
         default:
           return;
       }
@@ -531,15 +934,88 @@
 
   /* ── Boot ─────────────────────────────────────────────────────────────── */
 
+  /* Chrome that differs per page: the back arrow (has_back() is true for the
+     program page), the primary button's label, and the footer hints. */
+  function renderChrome() {
+    var back = document.getElementById("gui-back");
+    if (back) back.hidden = guiPage !== "programs";
+
+    var next = document.getElementById("gui-next");
+    if (next) next.textContent = guiPage === "programs" ? "Start Cleaning" : "Next";
+
+    var count = document.getElementById("tui-count");
+    if (count) {
+      count.textContent =
+        tuiPage === "programs"
+          ? "Programs (" +
+            programs.filter(programChecked).length + "/" + filterPrograms(programs, tuiSearch).length + " shown)"
+          : "Categories (" + selectedCount() + "/" + CATEGORIES.length + " selected)";
+    }
+
+    var btn = document.querySelector("#tui-frame .term__btn");
+    if (btn) btn.textContent = tuiPage === "programs" ? " Start Cleaning " : " Next ";
+
+    var foot = document.getElementById("tui-foot");
+    if (foot) {
+      var live = toast && Date.now() < toast.until;
+      foot.textContent = live
+        ? (toast.kind === "warn" ? " " + toast.message : " " + toast.message)
+        : tuiPage === "programs"
+          ? "↑↓ move · space select · → cats · / search · S start · esc back · ? changelog · G repo · q quit"
+          : "↑↓ row · tab column · space select · →/enter subs · n next · s settings · ? changelog · G repo · q quit";
+      foot.classList.toggle("t-warn", !!live);
+    }
+  }
+
   function renderAll() {
     renderGui();
     renderTui();
+    renderChrome();
+
     // A popup shows a category's entries, so it has to follow a toggle. The
     // cell that opened it was just replaced, so re-anchor to its new node.
     if (guiPopIndex !== -1) {
       openGuiPop(guiPopIndex, document.querySelector('[data-submenu="' + guiPopIndex + '"]'));
     }
     if (tuiPopIndex !== -1) renderTuiPop();
+  }
+
+  /* ── Wiring the primary buttons ─────────────────────────────────────────
+     The window mock's button is a real <button>; the terminal one is the
+     pinned ` Next ` paragraph, so it gets a click handler of its own. */
+
+  function initButtons() {
+    var next = document.getElementById("gui-next");
+    if (next) {
+      next.addEventListener("click", function () {
+        if (guiPage === "categories") {
+          if (goToPrograms()) setPage("gui", "programs");
+        } else {
+          showToast("Cleaning is not simulated here.");
+        }
+        renderAll();
+      });
+    }
+
+    var back = document.getElementById("gui-back");
+    if (back) {
+      back.addEventListener("click", function () {
+        setPage("gui", "categories");
+        renderAll();
+      });
+    }
+
+    var tuiNext = document.querySelector("#tui-frame .term__btnrow");
+    if (tuiNext) {
+      tuiNext.addEventListener("click", function () {
+        if (tuiPage === "categories") {
+          if (goToPrograms()) setPage("tui", "programs");
+        } else {
+          showToast("Cleaning is not simulated here.");
+        }
+        renderAll();
+      });
+    }
   }
 
   document.addEventListener("click", function (event) {
@@ -578,5 +1054,6 @@
 
   seedInitialState();
   renderAll();
+  initButtons();
   initTuiKeys();
 })();

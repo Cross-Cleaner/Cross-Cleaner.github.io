@@ -404,6 +404,7 @@
         <figure class="mock reveal">
           <div class="win">
             <div class="win__bar">
+              <button class="win__back" id="gui-back" type="button" aria-label="Back to categories" hidden>&#8592;</button>
               <span class="win__title">Cross Cleaner v2.0.4</span>
               <span class="win__controls">
                 <svg class="icon" aria-hidden="true"><use href="#i-code"></use></svg>
@@ -413,23 +414,28 @@
               </span>
             </div>
 
-            <div class="win__body">
-              <div class="win__cols" id="gui-cols">
-                <div class="win__col" id="gui-left">
-                  <span class="gcell"><i class="gchk is-on"></i>Cache (71)</span>
-                  <span class="gcell"><i class="gchk"></i>Logs (266)</span>
-                  <span class="gcell"><i class="gchk"></i>Crashes (24)</span>
-                  <span class="gcell"><i class="gchk is-on"></i>Documentation (211)<svg class="gmenu" aria-hidden="true"><use href="#i-menu"></use></svg></span>
-                  <span class="gcell"><i class="gchk"></i>Backups (3)</span>
-                  <span class="gcell"><i class="gchk is-part"></i>LastActivity (11)<svg class="gmenu" aria-hidden="true"><use href="#i-menu"></use></svg></span>
-                </div>
-                <div class="win__col win__col--rtl" id="gui-right">
-                  <span class="gcell"><i class="gchk"></i>Accounts (14)</span>
-                  <span class="gcell"><svg class="gmenu" aria-hidden="true"><use href="#i-menu"></use></svg><i class="gchk is-on"></i>Browser (42)</span>
-                  <span class="gcell"><i class="gchk"></i>Cheats (26)</span>
-                  <span class="gcell"><i class="gchk is-on"></i>Downloads (1)</span>
-                  <span class="gcell"><svg class="gmenu" aria-hidden="true"><use href="#i-menu"></use></svg><i class="gchk"></i>Game (34)</span>
-                  <span class="gcell"><i class="gchk"></i>Images (23)</span>
+            <div class="win__main">
+              <!-- Heading, separator and search stay put; only the list below
+                   scrolls, which is what split_list_and_button() does. -->
+              <div class="win__head" id="gui-head"></div>
+              <div class="win__body" id="gui-body">
+                <div class="win__cols" id="gui-cols">
+                  <div class="win__col" id="gui-left">
+                    <span class="gcell"><i class="gchk is-on"></i>Cache (71)</span>
+                    <span class="gcell"><i class="gchk"></i>Logs (266)</span>
+                    <span class="gcell"><i class="gchk"></i>Crashes (24)</span>
+                    <span class="gcell"><i class="gchk is-on"></i>Documentation (211)<svg class="gmenu" aria-hidden="true"><use href="#i-menu"></use></svg></span>
+                    <span class="gcell"><i class="gchk"></i>Backups (3)</span>
+                    <span class="gcell"><i class="gchk is-part"></i>LastActivity (11)<svg class="gmenu" aria-hidden="true"><use href="#i-menu"></use></svg></span>
+                  </div>
+                  <div class="win__col win__col--rtl" id="gui-right">
+                    <span class="gcell"><i class="gchk"></i>Accounts (14)</span>
+                    <span class="gcell"><svg class="gmenu" aria-hidden="true"><use href="#i-menu"></use></svg><i class="gchk is-on"></i>Browser (42)</span>
+                    <span class="gcell"><i class="gchk"></i>Cheats (26)</span>
+                    <span class="gcell"><i class="gchk is-on"></i>Downloads (1)</span>
+                    <span class="gcell"><svg class="gmenu" aria-hidden="true"><use href="#i-menu"></use></svg><i class="gchk"></i>Game (34)</span>
+                    <span class="gcell"><i class="gchk"></i>Images (23)</span>
+                  </div>
                 </div>
               </div>
             </div>
