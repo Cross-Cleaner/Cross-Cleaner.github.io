@@ -1,0 +1,964 @@
+/* ==========================================================================
+   Cross Cleaner — landing page
+
+   Material Design 3, hand-rolled. The components below (button, chip, tabs,
+   icon button, divider, progress) are styled from the same --md-sys-color-*
+   tokens that a Material Web component would read, so the design language is
+   M3 without pulling a webfont or a JavaScript bundle from a CDN.
+
+   Everything degrades: the page is complete and readable as plain HTML, and
+   JavaScript only adds the theme toggle, the mobile sheet, tab switching and
+   the scroll animations.
+   ========================================================================== */
+
+/* ── Theme: light ──────────────────────────────────────────────────────── */
+:root {
+  color-scheme: light;
+
+  /* Amber primary (from the app icon), green tertiary for the clean accents. */
+  --md-sys-color-primary: #7B5800;
+  --md-sys-color-on-primary: #FFFFFF;
+  --md-sys-color-primary-container: #FFDEA3;
+  --md-sys-color-on-primary-container: #261A00;
+
+  --md-sys-color-secondary: #6B5D3F;
+  --md-sys-color-on-secondary: #FFFFFF;
+  --md-sys-color-secondary-container: #F5E0B8;
+  --md-sys-color-on-secondary-container: #241A04;
+
+  --md-sys-color-tertiary: #41693F;
+  --md-sys-color-on-tertiary: #FFFFFF;
+  --md-sys-color-tertiary-container: #C2F0BB;
+  --md-sys-color-on-tertiary-container: #002106;
+
+  --md-sys-color-error: #BA1A1A;
+  --md-sys-color-on-error: #FFFFFF;
+
+  --md-sys-color-background: #FFF8F2;
+  --md-sys-color-on-background: #1F1B16;
+  --md-sys-color-surface: #FFF8F2;
+  --md-sys-color-on-surface: #1F1B16;
+  --md-sys-color-surface-variant: #EDE1CF;
+  --md-sys-color-on-surface-variant: #4D4639;
+
+  --md-sys-color-surface-container-low: #FDF2E4;
+  --md-sys-color-surface-container: #F7EBDD;
+  --md-sys-color-surface-container-high: #F1E5D7;
+
+  --md-sys-color-outline: #7F7667;
+  --md-sys-color-outline-variant: #D0C5B4;
+  --md-sys-color-inverse-surface: #34302A;
+  --md-sys-color-inverse-on-surface: #F8EFE7;
+
+  /* Shape scale. Fully rounded pills are the M3 default for buttons and chips. */
+  --md-shape-xs: 4px;
+  --md-shape-sm: 8px;
+  --md-shape-md: 12px;
+  --md-shape-lg: 16px;
+  --md-shape-xl: 28px;
+  --md-shape-full: 999px;
+
+  /* Motion. */
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-emphasized: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+
+  /* Layout. */
+  --wrap: 1120px;
+  --gutter: clamp(1rem, 4vw, 2rem);
+  --app-bar-h: 64px;
+
+  --font: "Inter", "Roboto", "Segoe UI Variable Text", "Segoe UI", system-ui,
+          -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", "Cascadia Code", ui-monospace,
+               SFMono-Regular, Consolas, monospace;
+}
+
+/* ── Theme: dark ───────────────────────────────────────────────────────── */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { color-scheme: dark; }
+  :root:not([data-theme="light"]) {
+    --md-sys-color-primary: #F2BF48;
+    --md-sys-color-on-primary: #412D00;
+    --md-sys-color-primary-container: #5C4200;
+    --md-sys-color-on-primary-container: #FFDEA3;
+
+    --md-sys-color-secondary: #D8C4A0;
+    --md-sys-color-on-secondary: #3B2F15;
+    --md-sys-color-secondary-container: #52452A;
+    --md-sys-color-on-secondary-container: #F5E0B8;
+
+    --md-sys-color-tertiary: #A6D3A0;
+    --md-sys-color-on-tertiary: #0D390F;
+    --md-sys-color-tertiary-container: #275129;
+    --md-sys-color-on-tertiary-container: #C2F0BB;
+
+    --md-sys-color-error: #FFB4AB;
+    --md-sys-color-on-error: #690005;
+
+    --md-sys-color-background: #17130C;
+    --md-sys-color-on-background: #ECE0D2;
+    --md-sys-color-surface: #17130C;
+    --md-sys-color-on-surface: #ECE0D2;
+    --md-sys-color-surface-variant: #4D4639;
+    --md-sys-color-on-surface-variant: #D0C5B4;
+
+    --md-sys-color-surface-container-low: #1F1B16;
+    --md-sys-color-surface-container: #242019;
+    --md-sys-color-surface-container-high: #2F2A22;
+
+    --md-sys-color-outline: #999080;
+    --md-sys-color-outline-variant: #4D4639;
+    --md-sys-color-inverse-surface: #ECE0D2;
+    --md-sys-color-inverse-on-surface: #34302A;
+  }
+}
+
+/* An explicit choice from the toggle wins over the OS preference. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --md-sys-color-primary: #F2BF48;
+  --md-sys-color-on-primary: #412D00;
+  --md-sys-color-primary-container: #5C4200;
+  --md-sys-color-on-primary-container: #FFDEA3;
+
+  --md-sys-color-secondary: #D8C4A0;
+  --md-sys-color-on-secondary: #3B2F15;
+  --md-sys-color-secondary-container: #52452A;
+  --md-sys-color-on-secondary-container: #F5E0B8;
+
+  --md-sys-color-tertiary: #A6D3A0;
+  --md-sys-color-on-tertiary: #0D390F;
+  --md-sys-color-tertiary-container: #275129;
+  --md-sys-color-on-tertiary-container: #C2F0BB;
+
+  --md-sys-color-error: #FFB4AB;
+  --md-sys-color-on-error: #690005;
+
+  --md-sys-color-background: #17130C;
+  --md-sys-color-on-background: #ECE0D2;
+  --md-sys-color-surface: #17130C;
+  --md-sys-color-on-surface: #ECE0D2;
+  --md-sys-color-surface-variant: #4D4639;
+  --md-sys-color-on-surface-variant: #D0C5B4;
+
+  --md-sys-color-surface-container-low: #1F1B16;
+  --md-sys-color-surface-container: #242019;
+  --md-sys-color-surface-container-high: #2F2A22;
+
+  --md-sys-color-outline: #999080;
+  --md-sys-color-outline-variant: #4D4639;
+  --md-sys-color-inverse-surface: #ECE0D2;
+  --md-sys-color-inverse-on-surface: #34302A;
+}
+
+/* ── Base ──────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  /* Anchor targets clear the sticky app bar instead of hiding under it. */
+  scroll-padding-top: calc(var(--app-bar-h) + 1rem);
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--md-sys-color-on-surface);
+  background: var(--md-sys-color-surface);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+img { max-width: 100%; display: block; }
+svg.sprite { display: none; }
+
+a { color: var(--md-sys-color-primary); }
+
+h1, h2, h3 {
+  margin: 0;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  font-weight: 700;
+  text-wrap: balance;
+}
+h1 { font-size: clamp(2.25rem, 6vw, 3.75rem); letter-spacing: -0.03em; }
+h2 { font-size: clamp(1.6rem, 3.4vw, 2.25rem); }
+h3 { font-size: 1.125rem; }
+p  { margin: 0; text-wrap: pretty; }
+
+.wrap {
+  width: 100%;
+  max-width: var(--wrap);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  z-index: 100;
+  padding: 0.75rem 1rem;
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  border-radius: 0 0 var(--md-shape-sm) 0;
+  font-weight: 600;
+}
+.skip-link:focus { left: 0; top: 0; }
+
+:focus-visible {
+  outline: 3px solid var(--md-sys-color-primary);
+  outline-offset: 2px;
+  border-radius: var(--md-shape-xs);
+}
+
+/* ── Icon ──────────────────────────────────────────────────────────────── */
+.icon {
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+  flex-shrink: 0;
+  vertical-align: -0.125em;
+}
+
+/* ── Button ────────────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 40px;
+  padding-inline: 1.5rem;
+  border: 1px solid transparent;
+  border-radius: var(--md-shape-full);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 0.15s var(--ease-standard),
+    border-color 0.15s var(--ease-standard),
+    color 0.15s var(--ease-standard),
+    box-shadow 0.15s var(--ease-standard);
+}
+.btn .icon { font-size: 18px; }
+
+.btn--filled {
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 12%);
+}
+.btn--filled:hover { box-shadow: 0 2px 6px rgb(0 0 0 / 18%); }
+.btn--filled:active { box-shadow: 0 1px 2px rgb(0 0 0 / 12%); }
+
+.btn--outlined {
+  border-color: var(--md-sys-color-outline);
+  color: var(--md-sys-color-primary);
+}
+.btn--outlined:hover {
+  background: color-mix(in srgb, var(--md-sys-color-primary) 8%, transparent);
+}
+
+.btn--text { color: var(--md-sys-color-primary); padding-inline: 1rem; }
+.btn--text:hover { background: color-mix(in srgb, var(--md-sys-color-primary) 8%, transparent); }
+
+.btn--lg { height: 48px; padding-inline: 1.75rem; font-size: 0.9375rem; }
+.btn--lg .icon { font-size: 20px; }
+
+/* ── Chip ──────────────────────────────────────────────────────────────── */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  height: 32px;
+  padding-inline: 0.875rem;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-shape-sm);
+  background: var(--md-sys-color-surface-container-low);
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.chip .icon { font-size: 16px; }
+
+.chip--eyebrow {
+  background: var(--md-sys-color-primary-container);
+  border-color: transparent;
+  color: var(--md-sys-color-on-primary-container);
+  font-weight: 600;
+}
+
+/* ── Icon button ───────────────────────────────────────────────────────── */
+.icon-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--md-shape-full);
+  background: transparent;
+  color: var(--md-sys-color-on-surface-variant);
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 22px;
+  transition: background 0.15s var(--ease-standard), color 0.15s var(--ease-standard);
+}
+.icon-btn:hover {
+  background: color-mix(in srgb, var(--md-sys-color-on-surface) 8%, transparent);
+  color: var(--md-sys-color-on-surface);
+}
+
+/* ── Divider ───────────────────────────────────────────────────────────── */
+.divider {
+  height: 1px;
+  margin: 0;
+  border: 0;
+  background: var(--md-sys-color-outline-variant);
+}
+
+/* ── Scroll progress ───────────────────────────────────────────────────── */
+.scroll-progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.25s var(--ease-standard);
+  pointer-events: none;
+}
+.scroll-progress[data-visible] { opacity: 1; }
+.scroll-progress span {
+  display: block;
+  height: 100%;
+  background: var(--md-sys-color-primary);
+  /* Scale rather than resize width: no layout on every scroll frame. */
+  transform: scaleX(var(--progress, 0));
+  transform-origin: left center;
+}
+
+/* ── App bar ───────────────────────────────────────────────────────────── */
+.app-bar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: color-mix(in srgb, var(--md-sys-color-surface) 82%, transparent);
+  backdrop-filter: blur(14px) saturate(140%);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s var(--ease-standard);
+}
+.app-bar[data-scrolled] { border-bottom-color: var(--md-sys-color-outline-variant); }
+
+.app-bar__inner {
+  max-width: var(--wrap);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  min-height: var(--app-bar-h);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-weight: 700;
+  font-size: 1.0625rem;
+  color: var(--md-sys-color-on-surface);
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.brand__logo { border-radius: var(--md-shape-sm); }
+.brand__name { white-space: nowrap; }
+
+.nav { display: flex; align-items: center; gap: 0.25rem; margin-left: auto; }
+.nav a {
+  padding: 0.5rem 0.875rem;
+  border-radius: var(--md-shape-full);
+  color: var(--md-sys-color-on-surface-variant);
+  text-decoration: none;
+  font-weight: 500;
+  transition: background 0.15s var(--ease-standard), color 0.15s var(--ease-standard);
+}
+.nav a:hover {
+  background: color-mix(in srgb, var(--md-sys-color-on-surface) 8%, transparent);
+  color: var(--md-sys-color-on-surface);
+}
+.nav__cta {
+  border: 1px solid var(--md-sys-color-outline-variant);
+  color: var(--md-sys-color-primary) !important;
+}
+
+.app-bar__actions { display: flex; align-items: center; gap: 0.25rem; }
+.nav-toggle { display: none; }
+
+/* ── Hero ──────────────────────────────────────────────────────────────── */
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding-block: clamp(3.5rem, 10vw, 7rem);
+  background:
+    radial-gradient(120% 90% at 50% -20%,
+      color-mix(in srgb, var(--md-sys-color-primary-container) 70%, transparent) 0%,
+      transparent 60%),
+    var(--md-sys-color-surface);
+}
+
+/* A faint oversized glow, anchored top-right. */
+.hero__glow {
+  position: absolute;
+  top: -18%;
+  right: -8%;
+  width: min(46rem, 90vw);
+  aspect-ratio: 1;
+  background: radial-gradient(circle at 50% 50%,
+    color-mix(in srgb, var(--md-sys-color-primary) 16%, transparent) 0%,
+    transparent 62%);
+  filter: blur(28px);
+  pointer-events: none;
+}
+
+.hero__inner { position: relative; text-align: center; }
+.chip--eyebrow { margin-bottom: 1.25rem; }
+.hero__title { margin-bottom: 1.25rem; }
+
+.hero__lead {
+  max-width: 46rem;
+  margin-inline: auto;
+  font-size: clamp(1rem, 2.2vw, 1.1875rem);
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  list-style: none;
+  margin: 2.5rem 0 0;
+  padding: 0;
+}
+.badges img { border-radius: var(--md-shape-xs); }
+
+/* ── Sections ──────────────────────────────────────────────────────────── */
+.section { padding-block: clamp(3.5rem, 8vw, 6rem); }
+.section--alt { background: var(--md-sys-color-surface-container-low); }
+
+.section__head {
+  max-width: 42rem;
+  margin: 0 auto clamp(2rem, 5vw, 3rem);
+  text-align: center;
+  display: grid;
+  justify-items: center;
+  gap: 0.875rem;
+}
+.section__head p { color: var(--md-sys-color-on-surface-variant); }
+
+/* ── Cards ─────────────────────────────────────────────────────────────── */
+.grid { display: grid; gap: 1rem; }
+.grid--3 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr)); }
+
+.card {
+  background: var(--md-sys-color-surface-container-low);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-shape-lg);
+  padding: 1.5rem;
+  display: grid;
+  gap: 0.625rem;
+  align-content: start;
+  transition: transform 0.25s var(--ease-emphasized), box-shadow 0.25s var(--ease-standard);
+}
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px -8px rgb(0 0 0 / 35%);
+}
+.card p { color: var(--md-sys-color-on-surface-variant); font-size: 0.9375rem; }
+
+.card__icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: 0.25rem;
+  border-radius: var(--md-shape-md);
+  background: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+  font-size: 24px;
+}
+
+/* ── Tabs ──────────────────────────────────────────────────────────────── */
+.tabs {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.5rem 0.5rem 0;
+  background: var(--md-sys-color-surface-container-low);
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar { display: none; }
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 48px;
+  padding-inline: 1rem;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  background: transparent;
+  color: var(--md-sys-color-on-surface-variant);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.15s var(--ease-standard), border-color 0.15s var(--ease-standard);
+}
+.tab .icon { font-size: 20px; }
+.tab:hover { color: var(--md-sys-color-on-surface); }
+.tab[aria-selected="true"] {
+  color: var(--md-sys-color-primary);
+  border-bottom-color: var(--md-sys-color-primary);
+}
+
+/* ── Download ──────────────────────────────────────────────────────────── */
+.download {
+  max-width: 56rem;
+  margin-inline: auto;
+  background: var(--md-sys-color-surface);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-shape-lg);
+  overflow: hidden;
+}
+
+.download__panel { padding: 1.5rem; display: grid; gap: 1.5rem; }
+.download__panel[hidden] { display: none; }
+
+.download__note {
+  font-size: 0.9375rem;
+  color: var(--md-sys-color-on-surface-variant);
+  max-width: 48rem;
+}
+
+.download__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.download__kind { display: grid; gap: 0.625rem; }
+.chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.download__links { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+.download__footer {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 0.9375rem;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+/* ── Gallery ───────────────────────────────────────────────────────────── */
+/* The two mockups below are drawn from the real layouts: colours come from
+   crates/tui/src/theme.rs, and the widget arrangement from
+   crates/gui/src/pages/main.rs and crates/tui/src/pages/main.rs. They are
+   schematics, not screenshots. */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 26rem), 1fr));
+  gap: 1.75rem;
+  align-items: start;
+}
+
+.mock { margin: 0; display: grid; gap: 0.875rem; }
+.mock figcaption {
+  text-align: center;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+/* --- Window app mock (egui dark) --- */
+.win {
+  /* egui's dark theme greys, roughly. */
+  --egui-window: #2b2b2b;
+  --egui-panel: #323232;
+  --egui-stroke: #4d4d4d;
+  --egui-text: #d5d5d5;
+  --egui-dim: #9a9a9a;
+  --egui-btn: #3d3d3d;
+  --egui-accent: #4a90d9;
+
+  background: var(--egui-window);
+  border: 2px solid var(--egui-stroke);
+  border-radius: 6px;
+  color: var(--egui-text);
+  font-size: 0.8125rem;
+  overflow: hidden;
+  box-shadow: 0 14px 34px -22px rgb(0 0 0 / 70%);
+}
+
+/* The 32px custom title bar from crates/gui/src/title_bar.rs. */
+.win__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 32px;
+  padding-inline: 8px;
+  background: var(--egui-window);
+  border-bottom: 1px solid var(--egui-stroke);
+}
+.win__title { font-size: 0.75rem; color: var(--egui-text); }
+.win__controls { display: flex; align-items: center; gap: 10px; font-size: 15px; }
+.win__sep { width: 1px; height: 20px; background: var(--egui-stroke); }
+.win__glyph {
+  width: 16px;
+  text-align: center;
+  line-height: 1;
+  color: var(--egui-text);
+}
+
+.win__body { padding: 10px 12px 6px; background: var(--egui-window); }
+
+/* Two columns; the right one is laid out right-to-left so its checkboxes sit
+   against the window edge, the same trick the app uses. */
+.win__cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0 18px; }
+.win__col { display: grid; gap: 7px; }
+.win__col--rtl { justify-items: end; }
+
+.gcell {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.8125rem;
+  white-space: nowrap;
+}
+
+/* Tristate checkbox: empty, checked, or indeterminate (a filled inner square,
+   which is how crates/gui/src/categories.rs paints it). */
+.gchk {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  border: 1.5px solid var(--egui-dim);
+  border-radius: 3px;
+  position: relative;
+}
+.gchk.is-on { background: var(--egui-accent); border-color: var(--egui-accent); }
+.gchk.is-on::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 3px;
+  height: 7px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(43deg);
+}
+.gchk.is-part { border-color: var(--egui-accent); }
+.gchk.is-part::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  background: var(--egui-accent);
+  border-radius: 1px;
+}
+
+/* The subcategory menu button (menu.png, 16x16, tinted with the text colour). */
+.gmenu {
+  width: 14px;
+  height: 4px;
+  flex-shrink: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--egui-dim) 0 1px,
+    transparent 1px 2px
+  );
+}
+.gmenu--inline { display: inline-block; vertical-align: -1px; }
+
+.win__foot { padding: 6px 12px 12px; }
+.wbtn {
+  display: block;
+  text-align: center;
+  padding: 4px 0;
+  background: var(--egui-btn);
+  border-radius: 4px;
+  font-size: 0.8125rem;
+  color: var(--egui-text);
+}
+
+/* --- Terminal app mock --- */
+/* Exactly the palette in crates/tui/src/theme.rs. */
+.term {
+  --tui-bg: rgb(24, 24, 28);
+  --tui-panel: rgb(32, 32, 38);
+  --tui-border: rgb(72, 72, 82);
+  --tui-accent: rgb(0, 120, 215);
+  --tui-text: rgb(222, 222, 228);
+  --tui-dim: rgb(140, 140, 152);
+
+  background: var(--tui-bg);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.55;
+  color: var(--tui-text);
+  box-shadow: 0 14px 34px -22px rgb(0 0 0 / 70%);
+}
+
+.term__head { display: flex; gap: 0.4em; align-items: baseline; margin-bottom: 6px; }
+.term__head b { font-weight: 700; }
+.term__head .t-acc { margin-left: auto; }
+
+.t-acc { color: var(--tui-accent); }
+.t-on  { color: rgb(60, 180, 90); font-style: normal; }
+.t-warn{ color: rgb(220, 170, 40); font-style: normal; }
+
+/* Rounded border block, as ratatui draws it with BorderType::Rounded. */
+.term__frame {
+  position: relative;
+  border: 1px solid var(--tui-border);
+  border-radius: 6px;
+  padding: 15px 10px 8px;
+}
+.term__title {
+  position: absolute;
+  top: -8px;
+  left: 10px;
+  padding-inline: 4px;
+  background: var(--tui-bg);
+}
+
+/* The grid mirrors the terminal's fixed character cells: two columns, the
+   right one flush to the right edge. `min-width: 0` on the tracks is what keeps
+   the nowrap cells from blowing the grid out past the frame. */
+.term__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1px 14px;
+  font-size: 0.6875rem;
+}
+.term__grid > span {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35em;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.term__grid i { font-style: normal; }
+.term__grid > span:nth-child(even) { justify-content: flex-end; }
+
+/* The cell under the cursor is highlighted on exactly the columns `Space`
+   toggles, which is what Theme::selected() does. */
+.term__grid > span.is-focus {
+  background: var(--tui-accent);
+  color: #fff;
+  border-radius: 2px;
+  padding-inline: 2px;
+  font-weight: 700;
+}
+.term__grid > span.is-focus i,
+.term__grid > span.is-focus .t-acc,
+.term__grid > span.is-focus .t-dim { color: #fff; }
+
+.term__btnrow {
+  margin-top: 8px;
+  padding: 3px 6px;
+  background: var(--tui-panel);
+  border-radius: 4px;
+}
+.term__btn {
+  background: var(--tui-accent);
+  color: #fff;
+  font-weight: 700;
+  padding-inline: 0.5em;
+  border-radius: 3px;
+}
+
+.term__foot {
+  margin-top: 8px;
+  font-size: 0.6875rem;
+  /* A real terminal clips the hints at its own width; wrapping keeps every
+     binding readable in a mock of fixed size. */
+  overflow-wrap: anywhere;
+}
+
+/* ── Stats ─────────────────────────────────────────────────────────────── */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: 1rem;
+  margin-bottom: clamp(2rem, 5vw, 3rem);
+}
+.stat {
+  display: grid;
+  gap: 0.5rem;
+  padding: 1.5rem;
+  border-radius: var(--md-shape-lg);
+  background: var(--md-sys-color-surface);
+  border: 1px solid var(--md-sys-color-outline-variant);
+}
+.stat strong {
+  font-size: 2rem;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--md-sys-color-primary);
+}
+.stat span { font-size: 0.875rem; color: var(--md-sys-color-on-surface-variant); }
+
+.catalog {
+  padding: clamp(1.5rem, 4vw, 2.25rem);
+  border-radius: var(--md-shape-xl);
+  background: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+  display: grid;
+  gap: 0.75rem;
+  justify-items: start;
+}
+.catalog p { max-width: 44rem; }
+.catalog__links { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
+/* Outlined buttons on the container colour need to follow it, not the theme's
+   primary, or they lose contrast against the amber background. */
+.catalog__links .btn--outlined {
+  border-color: currentColor;
+  color: inherit;
+}
+.catalog__links .btn--outlined:hover {
+  background: color-mix(in srgb, var(--md-sys-color-on-primary-container) 10%, transparent);
+}
+
+/* ── CTA ───────────────────────────────────────────────────────────────── */
+.cta { padding-block: clamp(3rem, 7vw, 5rem); }
+.cta__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: clamp(1.75rem, 4vw, 2.25rem);
+  border-radius: var(--md-shape-xl);
+  background: var(--md-sys-color-surface-container-high);
+  border: 1px solid var(--md-sys-color-outline-variant);
+}
+.cta__inner p { color: var(--md-sys-color-on-surface-variant); margin-top: 0.5rem; }
+.cta__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+
+/* ── Footer ────────────────────────────────────────────────────────────── */
+.footer {
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+  background: var(--md-sys-color-surface-container-low);
+  padding-block: 2.5rem 1.5rem;
+}
+.footer__inner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.footer__brand { display: flex; align-items: center; gap: 0.75rem; }
+.footer__brand img { border-radius: var(--md-shape-sm); }
+.footer__brand div { display: grid; }
+.footer__brand span { font-size: 0.875rem; color: var(--md-sys-color-on-surface-variant); }
+
+.footer__links { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; }
+.footer__links a {
+  color: var(--md-sys-color-on-surface-variant);
+  text-decoration: none;
+  font-size: 0.9375rem;
+}
+.footer__links a:hover { color: var(--md-sys-color-primary); text-decoration: underline; }
+
+.footer__legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.5rem;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+  font-size: 0.8125rem;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+/* ── Reveal on scroll ──────────────────────────────────────────────────── */
+/* Hidden only once JS has confirmed it can animate them: `.js-reveal` is added
+   by the script, so a visitor with JS disabled — or on an old browser — still
+   sees every section. The safety timeout removes it again if the observer
+   never fires. */
+.js-reveal .reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.55s var(--ease-emphasized), transform 0.55s var(--ease-emphasized);
+}
+.js-reveal .reveal.is-visible { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .js-reveal .reveal { opacity: 1; transform: none; transition: none; }
+  * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
+
+/* ── Responsive ────────────────────────────────────────────────────────── */
+@media (max-width: 860px) {
+  .nav-toggle { display: inline-grid; }
+
+  .nav {
+    position: absolute;
+    inset: var(--app-bar-h) 0 auto;
+    margin: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.125rem;
+    padding: 0.75rem var(--gutter) 1rem;
+    background: var(--md-sys-color-surface-container-low);
+    border-bottom: 1px solid var(--md-sys-color-outline-variant);
+    box-shadow: 0 12px 24px -18px rgb(0 0 0 / 60%);
+    display: none;
+  }
+  .nav[data-open] { display: flex; }
+  .nav a { padding: 0.75rem 0.875rem; }
+}
+
+@media (max-width: 560px) {
+  .brand__name { display: none; }
+  .download__links { width: 100%; }
+  .tabs { padding-inline: 0.25rem; }
+  .tab { padding-inline: 0.75rem; }
+  /* Two columns of 12pt labels do not fit a phone, and the window app itself
+     reflows the same way. */
+  .win__cols { grid-template-columns: 1fr; }
+  .win__col--rtl { justify-items: start; }
+  .term__grid { grid-template-columns: 1fr; }
+  .term__grid > span:nth-child(even) { justify-content: flex-start; }
+}
+
+@media print {
+  .app-bar, .download__links, .cta__actions, .hero__actions, .badges { display: none; }
+  .js-reveal .reveal { opacity: 1; transform: none; }
+  body { background: #fff; color: #000; }
+  .section { padding-block: 1.5rem; }
+}
