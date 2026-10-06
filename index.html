@@ -3,15 +3,67 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cross Cleaner — cross-platform system cleaner</title>
-<meta name="description" content="Cross Cleaner removes temporary files, cache and system junk on Windows, macOS, Linux and Android. Written in Rust, with a window app and a terminal app.">
+<title>Cross Cleaner — cross-platform system cleaner for Windows, macOS, Linux and Android</title>
+<meta name="description" content="Cross Cleaner removes temporary files, cache and system junk on Windows, macOS, Linux and Android. Written in Rust, with a native window app and a terminal app, for x86_64 and arm64.">
+
+<!-- Canonical and indexable: this is the only page on the site, and the
+     canonical has to be absolute for crawlers to deduplicate against it. -->
+<link rel="canonical" href="https://winbooster.github.io/">
+<meta name="robots" content="index, follow">
+
 <link rel="icon" href="assets/img/icon.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/img/icon.png">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#7B5800">
-<meta property="og:title" content="Cross Cleaner — cross-platform system cleaner">
-<meta property="og:description" content="Removes temporary files, cache and system junk on Windows, macOS, Linux and Android. Written in Rust.">
-<meta property="og:image" content="assets/img/icon.png">
+
+<!-- Open Graph. Every URL here is absolute: relative og:image and og:url are
+     silently dropped by most crawlers, which then cache no preview at all. -->
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="Cross Cleaner">
+<meta property="og:locale" content="en">
+<meta property="og:url" content="https://winbooster.github.io/">
+<meta property="og:title" content="Cross Cleaner — cross-platform system cleaner">
+<meta property="og:description" content="Removes temporary files, cache and system junk on Windows, macOS, Linux and Android. Written in Rust, with a window app and a terminal app.">
+<meta property="og:image" content="https://winbooster.github.io/assets/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Cross Cleaner — a cross-platform system cleanup tool">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Cross Cleaner — cross-platform system cleaner">
+<meta name="twitter:description" content="Removes temporary files, cache and system junk on Windows, macOS, Linux and Android. Written in Rust.">
+<meta name="twitter:image" content="https://winbooster.github.io/assets/img/og-image.png">
+
+<!-- Structured data, so the app can show up as a result rather than as a bare
+     link. Version and licence are taken from the repository. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Cross Cleaner",
+  "alternateName": "Cross_Cleaner",
+  "description": "Addon-style system cleanup tool that removes temporary files, cache and other system junk on Windows, macOS, Linux and Android.",
+  "url": "https://winbooster.github.io/",
+  "downloadUrl": "https://github.com/WinBooster/Cross-Cleaner/releases/latest",
+  "softwareVersion": "2.0.4",
+  "applicationCategory": "UtilitiesApplication",
+  "applicationSubCategory": "Disk Cleanup",
+  "operatingSystem": "Windows 10, Windows 11, macOS, Linux, Android",
+  "programmingLanguage": "Rust",
+  "license": "https://github.com/WinBooster/Cross-Cleaner/blob/main/LICENSE",
+  "isAccessibleForFree": true,
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Organization", "name": "WinBooster" },
+  "featureList": [
+    "Removes temporary files, cache and system junk",
+    "Window app and terminal app",
+    "Windows, macOS, Linux and Android",
+    "Native x86_64 and arm64 builds",
+    "In-app updates"
+  ]
+}
+</script>
+
 <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body>

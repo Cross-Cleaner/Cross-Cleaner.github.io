@@ -468,6 +468,20 @@
     }
   });
 
+  /* A click inside the popup must not reach the closer above.
+   *
+   * Ticking an entry rebuilds the list, which detaches the very node that was
+   * clicked. A detached target has no ancestor chain left, so the closer's
+   * `closest("#gui-pop")` returns null and the popup would shut the moment you
+   * ticked a box. Stopping propagation on the popup container is the only
+   * reliable signal that a click was inside it. Registered once, here, rather
+   * than in openGuiPop, so it cannot accumulate duplicates. */
+  if (guiPop) {
+    guiPop.addEventListener("click", function (event) {
+      event.stopPropagation();
+    });
+  }
+
   document.addEventListener("keydown", function (event) {
     if (event.key === "Escape" && guiPopIndex !== -1) {
       var trigger = document.querySelector('[data-submenu="' + guiPopIndex + '"]');

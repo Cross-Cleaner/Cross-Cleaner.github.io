@@ -1,0 +1,15 @@
+# Cross Cleaner — https://winbooster.github.io/
+# Single-page site, so almost everything is allowed by default. The point of
+# this file is to stop crawlers wasting requests on assets that carry no
+# search value, and to point them at the sitemap.
+
+User-agent: *
+Allow: /
+Disallow: /assets/css/
+Disallow: /assets/js/
+Disallow: /assets/img/
+
+# The social preview image and the icon are worth crawling — they are the
+# og:image and the favicon — so they stay allowed above.
+
+Sitemap: https://winbooster.github.io/sitemap.xml
