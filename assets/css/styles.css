@@ -443,6 +443,9 @@ p  { margin: 0; text-wrap: pretty; }
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  /* Every button carries an explicit height, so the default `stretch` would
+     fall back to top alignment and leave a shorter one sitting high. */
+  align-items: center;
   gap: 0.75rem;
   margin-top: 2rem;
 }

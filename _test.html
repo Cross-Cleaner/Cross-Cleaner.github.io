@@ -152,7 +152,7 @@
         <a class="btn btn--outlined btn--lg" href="https://github.com/WinBooster/Cross-Cleaner" rel="noopener">
           <svg class="icon" aria-hidden="true"><use href="#i-terminal"></use></svg>Build from source
         </a>
-        <a class="btn btn--text" href="https://discord.gg/wmJdUBaztX" rel="noopener">
+        <a class="btn btn--text btn--lg" href="https://discord.gg/wmJdUBaztX" rel="noopener">
           <svg class="icon" aria-hidden="true"><use href="#i-forum"></use></svg>Discord
         </a>
       </div>
@@ -579,68 +579,26 @@
      and the page has to work when index.html is opened straight from disk. -->
 <script src="assets/js/main.js" defer></script>
 <script src="assets/js/demo.js" defer></script>
-<div id="testout" style="position:fixed;left:0;top:0;right:0;z-index:99999;background:#000;color:#0f0;font:12px/1.45 monospace;padding:8px;white-space:pre-wrap"></div>
+<div id="testout" style="position:fixed;left:0;bottom:0;right:0;z-index:99999;background:#000;color:#0f0;font:13px/1.5 monospace;padding:8px"></div>
 <script>
 window.addEventListener("load", function () {
   setTimeout(function () {
-    var lines = [], n = 0, out = document.getElementById("testout");
-    function log(s){ lines.push((++n)+". "+s); out.textContent = lines.join("\n"); }
-    function step(name, fn){
-      try { var r = fn(); if (r !== undefined) log(name + " -> " + r); }
-      catch(e){ log(name + " !! " + e.message); }
-    }
-    var q = function(s){ return document.querySelector(s); };
-    var qa = function(s){ return document.querySelectorAll(s); };
-    var frame = q("#tui-frame");
-    function key(k, shift){ frame.dispatchEvent(new KeyboardEvent("keydown",{key:k,shiftKey:!!shift,bubbles:true})); }
-    function focusIdx(){ var f=q("#tui-grid > span.is-focus"); return f?f.dataset.index:"?"; }
-
-    step("TUI overlay rows carry counts", function(){
-      key("ArrowDown"); key("ArrowDown"); key("ArrowRight"); key("ArrowRight"); // -> index 5 LastActivity
-      var opened = !q("#tui-pop").hidden;
-      var rows = [].slice.call(qa("#tui-pop .term__pop-row")).map(function(r){ return r.textContent.trim(); });
-      return "open=" + opened + " focus=" + focusIdx() + "\n      " + rows.join("\n      ");
+    var out = document.getElementById("testout"), lines = [];
+    [].slice.call(document.querySelectorAll(".hero__actions .btn")).forEach(function (b) {
+      var r = b.getBoundingClientRect();
+      lines.push(b.textContent.trim().padEnd(18) +
+        " top=" + Math.round(r.top) + " bottom=" + Math.round(r.bottom) +
+        " h=" + Math.round(r.height) +
+        " centreY=" + Math.round(r.top + r.height/2));
     });
-    step("sum of sub counts + uncategorized = category total", function(){
-      var rows = [].slice.call(qa("#tui-pop .term__pop-row")).map(function(r){
-        return { name: r.querySelector("span").textContent.replace(/\s*\(\d+\)$/, ""),
-                 count: +(r.querySelector("span").textContent.match(/\((\d+)\)$/)||[0,0])[1] };
-      });
-      var sum = rows.reduce(function(a,r){ return a + r.count; }, 0);
-      return "LastActivity rows sum=" + sum + " | category label 'LastActivity (11)' total=11";
-    });
-    step("GUI popup rows carry counts too", function(){
-      key("Escape");
-      q("[data-submenu='3']").click();   // Documentation, 5 subs
-      var rows = [].slice.call(qa("#gui-pop li button")).map(function(b){ return b.textContent.trim(); });
-      return "popupW=" + Math.round(q("#gui-pop").getBoundingClientRect().width) + "px\n      " + rows.join("\n      ");
-    });
-    step("no leftover 'entries' text", function(){
-      return "matches for /entries/: " + qa("#gui-pop").length && (q("#gui-pop").textContent.match(/entries/g)||[]).length;
-    });
-    step("overlay still centred", function(){
-      var t = q(".term").getBoundingClientRect(), p = q("#tui-pop").getBoundingClientRect();
-      return "popup open=" + !q("#tui-pop").hidden;
-    });
-    step("arrow opens for Documentation", function(){
-      q("[data-submenu='3']").click();
-      key("Escape");
-      frame.focus();
-      // move to Documentation (index 3)
-      var guard = 0;
-      while (+focusIdx() !== 3 && guard++ < 12) key("ArrowLeft");
-      key("ArrowRight");
-      return "focus=" + focusIdx() + " popupOpen=" + !q("#tui-pop").hidden +
-             " title='" + q("#tui-pop .term__pop-title").textContent + "' rows=" + qa("#tui-pop .term__pop-row").length;
-    });
-    step("space toggles + row label keeps count", function(){
-      key(" ");
-      var row = q("#tui-pop .term__pop-row.is-focus");
-      return "'" + row.textContent.trim() + "' | cell now '" + q("#tui-grid > span[data-index='3']").textContent.trim() + "'";
-    });
-    step("escape closes", function(){ key("Escape"); return "popupOpen=" + !q("#tui-pop").hidden; });
-    log("DONE");
-  }, 800);
+    var tops = [].slice.call(document.querySelectorAll(".hero__actions .btn")).map(function(b){ return Math.round(b.getBoundingClientRect().top); });
+    var centres = [].slice.call(document.querySelectorAll(".hero__actions .btn")).map(function(b){ var r=b.getBoundingClientRect(); return Math.round(r.top+r.height/2); });
+    lines.push("---");
+    lines.push("all tops equal:     " + (new Set(tops).size === 1) + "  [" + tops.join(",") + "]");
+    lines.push("all centres equal:  " + (new Set(centres).size === 1) + "  [" + centres.join(",") + "]");
+    lines.push("spread of centres:  " + (Math.max.apply(null,centres) - Math.min.apply(null,centres)) + "px");
+    out.textContent = lines.join("\n");
+  }, 600);
 });
 </script></body>
 </html>
