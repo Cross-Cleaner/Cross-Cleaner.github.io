@@ -784,13 +784,12 @@ p  { margin: 0; text-wrap: pretty; }
 }
 .gui-pop button:hover { background: rgb(255 255 255 / 6%); }
 .gui-pop button:focus-visible { outline: 2px solid var(--egui-accent); outline-offset: 1px; }
-/* The entry count sits right after the name instead of being pushed to a
-   second column with margin-left: auto. */
-.gui-pop .gcount { color: var(--egui-dim); font-size: 0.75rem; flex-shrink: 0; }
 
 /* --- Terminal app mock --- */
 /* Exactly the palette in crates/tui/src/theme.rs. */
 .term {
+  /* Positioning context for the centred overlay. */
+  position: relative;
   --tui-bg: rgb(24, 24, 28);
   --tui-panel: rgb(32, 32, 38);
   --tui-border: rgb(72, 72, 82);
@@ -872,46 +871,81 @@ p  { margin: 0; text-wrap: pretty; }
 
 .term__frame:focus-visible { outline: 2px solid var(--tui-accent); outline-offset: 3px; }
 
-/* The subcategory overlay: a rounded block like every other TUI frame, with
-   its key hints on the bottom border the way the real popup draws them. */
+/* The subcategory overlay: render_popup() in crates/tui/src/app.rs centres it
+   over the screen and draws the key hints on its *bottom border*, right
+   aligned. It clears the grid underneath (ratatui's Clear widget), which the
+   opaque background does here. */
 .term__pop {
-  margin-top: 8px;
-  position: relative;
-  border: 1px solid var(--tui-border);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 4;
+  /* width = (area.width * 2 / 3).clamp(30, 64) in terminal cells */
+  min-width: 30ch;
+  max-width: 64ch;
+  width: 66%;
+  background: var(--tui-bg);
+  /* Theme::block(title, true): the focused border is the accent colour. */
+  border: 1px solid var(--tui-accent);
   border-radius: 6px;
-  padding: 15px 10px 6px;
+  padding: 15px 10px 9px;
+  font-size: 0.6875rem;
 }
+.term__pop[hidden] { display: none; }
+
 .term__pop-title {
   position: absolute;
   top: -8px;
   left: 10px;
   padding-inline: 4px;
   background: var(--tui-bg);
+  color: var(--tui-text);
+  font-weight: 700;
 }
-.term__pop-list { display: grid; gap: 1px; font-size: 0.6875rem; }
-.term__pop-list button {
+
+.term__pop-list { display: grid; gap: 1px; }
+
+.term__pop-row {
   display: flex;
   align-items: baseline;
   gap: 0.5em;
   width: 100%;
+  padding: 0 2px;
   border: 0;
   background: transparent;
   color: inherit;
   font: inherit;
   font-size: inherit;
   text-align: left;
-  padding: 0;
+  white-space: nowrap;
   cursor: pointer;
 }
-.term__pop-list button:focus-visible { outline: 1px solid var(--tui-accent); outline-offset: 1px; }
+.term__pop-row i { font-style: normal; }
+/* highlight_style(Theme::selected()) */
+.term__pop-row.is-focus {
+  background: var(--tui-accent);
+  color: #fff;
+  font-weight: 700;
+}
+.term__pop-row.is-focus i,
+.term__pop-row.is-focus .t-acc,
+.term__pop-row.is-focus .t-dim,
+.term__pop-row.is-focus .t-on,
+.term__pop-row.is-focus .t-warn { color: #fff; }
+
+/* Right-aligned on the bottom border, the way title_bottom() places it. */
 .term__pop-foot {
-  margin-top: 6px;
-  padding-top: 5px;
-  border-top: 1px solid var(--tui-border);
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -9px;
+  padding-inline: 8px;
+  background: var(--tui-bg);
+  color: var(--tui-border);
   font-size: 0.625rem;
-  color: var(--tui-dim);
-  display: flex;
-  justify-content: space-between;
+  text-align: right;
+  pointer-events: none;
 }
 
 .term__btnrow {
