@@ -3,8 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cross Cleaner — cross-platform system cleaner for Windows, macOS, Linux and Android</title>
-<meta name="description" content="Cross Cleaner removes temporary files, cache and system junk on Windows, macOS, Linux and Android. Written in Rust, with a native window app and a terminal app, for x86_64 and arm64.">
+<!-- The title names the two tools people search for when they are already
+     looking for a replacement, which is the highest-intent query this page can
+     answer. Kept near 50 characters so it survives truncation. -->
+<title>Cross Cleaner — CCleaner and BleachBit alternative</title>
+<meta name="description" content="A free, open-source CCleaner and BleachBit alternative that removes temporary files, cache and system junk on Windows, macOS, Linux and Android.">
+
+<!-- Keywords, including the "alternative to" queries that describe how people
+     actually look for this tool. Google has ignored meta keywords since 2009;
+     they are kept because other crawlers still read them, and the same list is
+     repeated in the structured data below. Keep it short and honest: stuffing
+     it with unrelated terms is what got the tag blacklisted in the first place. -->
+<meta name="keywords" content="ccleaner alternative, bleachbit alternative, cross cleaner, system cleaner, disk cleanup, junk file remover, cache cleaner, temporary file remover, windows cleaner, macos cleaner, linux cleaner, android cleaner, portable cleaner, terminal cleaner, rust">
 
 <!-- Canonical and indexable: this is the only page on the site, and the
      canonical has to be absolute for crawlers to deduplicate against it. -->
@@ -22,16 +32,16 @@
 <meta property="og:site_name" content="Cross Cleaner">
 <meta property="og:locale" content="en">
 <meta property="og:url" content="https://winbooster.github.io/">
-<meta property="og:title" content="Cross Cleaner — cross-platform system cleaner">
-<meta property="og:description" content="Removes temporary files, cache and system junk on Windows, macOS, Linux and Android. Written in Rust, with a window app and a terminal app.">
+<meta property="og:title" content="Cross Cleaner — CCleaner and BleachBit alternative">
+<meta property="og:description" content="A free, open-source alternative to CCleaner and BleachBit that clears temporary files, cache and system junk on Windows, macOS, Linux and Android.">
 <meta property="og:image" content="https://winbooster.github.io/assets/img/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Cross Cleaner — a cross-platform system cleanup tool">
 
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Cross Cleaner — cross-platform system cleaner">
-<meta name="twitter:description" content="Removes temporary files, cache and system junk on Windows, macOS, Linux and Android. Written in Rust.">
+<meta name="twitter:title" content="Cross Cleaner — CCleaner and BleachBit alternative">
+<meta name="twitter:description" content="A free, open-source CCleaner and BleachBit alternative for Windows, macOS, Linux and Android. Written in Rust.">
 <meta name="twitter:image" content="https://winbooster.github.io/assets/img/og-image.png">
 
 <!-- Structured data, so the app can show up as a result rather than as a bare
@@ -42,6 +52,7 @@
   "@type": "SoftwareApplication",
   "name": "Cross Cleaner",
   "alternateName": "Cross_Cleaner",
+  "keywords": "ccleaner alternative, bleachbit alternative, cross cleaner, system cleaner, disk cleanup, junk file remover, cache cleaner, temporary file remover, windows cleaner, macos cleaner, linux cleaner, android cleaner, portable cleaner, terminal cleaner, rust",
   "description": "Addon-style system cleanup tool that removes temporary files, cache and other system junk on Windows, macOS, Linux and Android.",
   "url": "https://winbooster.github.io/",
   "downloadUrl": "https://github.com/WinBooster/Cross-Cleaner/releases/latest",
@@ -59,7 +70,12 @@
     "Window app and terminal app",
     "Windows, macOS, Linux and Android",
     "Native x86_64 and arm64 builds",
-    "In-app updates"
+    "In-app updates",
+    "Free and open source under GPL-3.0",
+    "Multi-threaded sweeps with rayon for parallel disk access",
+    "262 catalogued programs across 564 paths on Windows",
+    "A lightweight CCleaner alternative",
+    "A BleachBit alternative that also covers Android"
   ]
 }
 </script>
@@ -105,6 +121,7 @@
 
     <nav class="nav" id="nav" aria-label="Main">
       <a href="#features">Features</a>
+      <a href="#alternatives">Alternatives</a>
       <a href="#download">Download</a>
       <a href="#gallery">Gallery</a>
       <a href="#under-the-hood">Details</a>
@@ -215,6 +232,105 @@
           <p>Every list is a plain JSON file you can edit or extend. Programs, registry entries and paths all live in open catalogs.</p>
         </article>
       </div>
+    </div>
+  </section>
+
+  <!-- ── Alternatives ───────────────────────────────────────────────
+       A large share of the searches this page can win are people
+       comparing Cross Cleaner with the cleaner they already know, so the
+       comparison gets its own section instead of a footnote. Both
+       projects are named as plain text: no logos, no implied endorsement,
+       and every claim is about this project rather than about them.
+       BleachBit in particular gets told plainly that it is a fine
+       choice, because a page that only ever ranks by trampling its
+       competitors reads as spam to everyone and to the search engines. -->
+  <section class="section" id="alternatives">
+    <div class="wrap">
+      <header class="section__head reveal">
+        <span class="chip">Alternatives</span>
+        <h2>Coming from CCleaner or BleachBit?</h2>
+        <p>
+          Both do the same job this app does. Here is the honest version of
+          the comparison: what differs, and what does not.
+        </p>
+      </header>
+
+      <div class="grid grid--3">
+        <article class="card reveal">
+          <span class="card__icon"><svg class="icon" aria-hidden="true"><use href="#i-desktop_windows"></use></svg></span>
+          <h3>A CCleaner alternative</h3>
+          <p>
+            CCleaner is a mature cleaner for Windows, and if Windows is the
+            only system you run it has no reason to change. Cross Cleaner
+            covers that case and adds macOS, Linux and Android on one cleanup
+            database, shipped as a single portable file with no runtime to
+            install.
+          </p>
+          <div class="chips">
+            <span class="chip">Free, GPL-3.0</span>
+            <span class="chip">macOS, Linux, Android</span>
+            <span class="chip">No install</span>
+          </div>
+        </article>
+
+        <article class="card reveal">
+          <span class="card__icon"><svg class="icon" aria-hidden="true"><use href="#i-code"></use></svg></span>
+          <h3>A BleachBit alternative</h3>
+          <p>
+            BleachBit is open source, cross-platform and well established, so
+            take this as a real option and not an upgrade. Cross Cleaner
+            differs in three specifics: it builds for Android as well, it
+            ships a native terminal app next to the window app, and its
+            cleanup catalogs are published in full &mdash; 262 programs across
+            564 paths on Windows, 71 programs across 162 paths on Linux, every
+            one of them listed by name in the repository.
+          </p>
+          <div class="chips">
+            <span class="chip">Also builds for Android</span>
+            <span class="chip">TUI and GUI</span>
+            <span class="chip">Public catalogs</span>
+          </div>
+        </article>
+
+        <article class="card reveal">
+          <span class="card__icon"><svg class="icon" aria-hidden="true"><use href="#i-verified_user"></use></svg></span>
+          <h3>Why it goes further</h3>
+          <p>
+            On both counts. Work is spread across every core with
+            <a href="https://github.com/WinBooster/Cross-Cleaner" rel="noopener">rayon</a>,
+            so a sweep hits the disk in parallel instead of one file at a time,
+            and the Windows catalog maps 262 programs onto 564 concrete paths
+            &mdash; browsers, launchers, IDEs, games, antivirus, VPNs &mdash;
+            so it reaches the leftovers those applications leave behind rather
+            than stopping at the obvious temp folders. Read the full
+            <a href="https://github.com/WinBooster/Cross-Cleaner/blob/main/LIST_WINDOWS.md" rel="noopener">catalog</a>
+            and check the counts for yourself.
+          </p>
+          <div class="chips">
+            <span class="chip">Multi-threaded via rayon</span>
+            <span class="chip">262 programs on Windows</span>
+          </div>
+        </article>
+      </div>
+
+      <!-- The counts live inside the cards rather than in a block of their
+           own. They come from the published catalogs, which are regenerated
+           from the database itself, so the figures are real and checkable.
+           Scope note, since it limits the claim above: the program counts
+           are Windows and Linux only. macOS is 1 program / 6 paths and
+           Android is 3 / 7, so "cleans more" is true of the Windows and
+           Linux catalogs and must not be read as covering all four
+           platforms. No speed figure is published anywhere in the repo, so
+           the speed claim is made from the implementation (multi-threaded
+           work, parallel disk access) instead of a benchmark that does not
+           exist. What is claimed about the competitors is deliberately
+           absent: neither ships a comparable per-program list, so there is
+           nothing on record to compare counts against. -->
+      <p class="section__note reveal">
+        Cross Cleaner is an independent project, not affiliated with or
+        endorsed by Piriform, the BleachBit project or any other cleaner.
+        Product names are the property of their respective owners.
+      </p>
     </div>
   </section>
 
