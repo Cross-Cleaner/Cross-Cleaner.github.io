@@ -1,10 +1,10 @@
 # WinBooster.github.io
 
 GitHub Pages site for **Cross Cleaner** — the addon-style system cleanup tool
-that lives in [WinBooster/Cross-Cleaner](https://github.com/WinBooster/Cross-Cleaner).
+that lives in [Cross-Optimizations/Cross-Cleaner](https://github.com/Cross-Optimizations/Cross-Cleaner).
 
 Serves as the GitHub Pages root for the `WinBooster` user, so the URL is
-<https://winbooster.github.io>.
+<[https://cross-optimizations.github.io>.
 
 ## Layout
 
