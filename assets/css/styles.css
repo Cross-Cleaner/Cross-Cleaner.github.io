@@ -617,6 +617,21 @@ p  { margin: 0; text-wrap: pretty; }
   color: var(--md-sys-color-on-surface-variant);
 }
 
+/* Flags in a caption are code, so they get the monospace face rather than the
+   serif-ish default: `-c Cache/Browser` has to read as one token. */
+.mock figcaption code,
+.section__note code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+  background: var(--md-sys-color-surface-container-high);
+  color: var(--md-sys-color-on-surface);
+  /* The quotes in `-p "Chrome=Logs"` are part of what is being shown, and a
+     line break between the flag and its value would be a different command. */
+  white-space: nowrap;
+}
+
 /* --- Window app mock (egui dark) --- */
 /* The palette lives on both the window and the popup: the popup is a sibling of
    .win rather than a child, so it would not inherit these otherwise. */
@@ -944,6 +959,12 @@ p  { margin: 0; text-wrap: pretty; }
 .t-acc { color: var(--tui-accent); }
 .t-on  { color: rgb(60, 180, 90); font-style: normal; }
 .t-warn{ color: rgb(220, 170, 40); font-style: normal; }
+/* Declared next to the other terminal colours rather than inside .term: the
+   class is used outside .term too (the CLI transcript sets its own frame), and
+   a rule nested under .term would silently not match there. The value is the
+   same dim grey in both, so the later `.term__cli .t-dim` override is only about
+   resolving the variable, not about picking a different colour. */
+.t-dim { color: var(--tui-dim, rgb(140, 140, 152)); }
 
 /* Rounded border block, as ratatui draws it with BorderType::Rounded. */
 .term__frame {
@@ -1179,6 +1200,49 @@ p  { margin: 0; text-wrap: pretty; }
      binding readable in a mock of fixed size. */
   overflow-wrap: anywhere;
 }
+
+/* --- Command line mock --- */
+/* A transcript rather than a widget grid, so it reuses the terminal palette and
+   drops the frame padding: `cli` draws no box around its output, so a box here
+   would be the mock inventing chrome the app does not have. */
+.term__cli {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--tui-border) transparent;
+  /* The prompt starts at the frame's own left edge, the way a shell does after
+     the frame's padding. */
+  margin: -6px 0 0 -4px;
+}
+.term__cli::-webkit-scrollbar { width: 8px; }
+.term__cli::-webkit-scrollbar-track { background: transparent; }
+.term__cli::-webkit-scrollbar-thumb { background: var(--tui-border); border-radius: var(--md-shape-full); }
+
+.cli-line {
+  /* A blank line above every command but the first, so the transcript reads as
+     separate runs rather than one dense block. */
+  margin-top: 0.9em;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.cli-line:first-child { margin-top: 0; }
+
+.cli-cmd { color: var(--tui-text); }
+
+.cli-out {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: var(--tui-text);
+}
+.cli-out b { font-weight: 700; }
+.cli-sub { padding-left: 1.5ch; }
+.cli-good { color: rgb(60, 180, 90); }
+
+/* Inside the transcript the dim colour is the app's own `--dim`, not a mock
+   decoration, so it is set from the same variable the terminal mock uses. */
+.term__cli .t-dim { color: var(--tui-dim); }
 
 /* ── Stats ─────────────────────────────────────────────────────────────── */
 .stats {

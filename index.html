@@ -14,7 +14,7 @@
      they are kept because other crawlers still read them, and the same list is
      repeated in the structured data below. Keep it short and honest: stuffing
      it with unrelated terms is what got the tag blacklisted in the first place. -->
-<meta name="keywords" content="ccleaner alternative, bleachbit alternative, cross cleaner, system cleaner, disk cleanup, junk file remover, cache cleaner, temporary file remover, windows cleaner, macos cleaner, linux cleaner, android cleaner, portable cleaner, terminal cleaner, rust">
+<meta name="keywords" content="ccleaner alternative, bleachbit alternative, cross cleaner, system cleaner, disk cleanup, junk file remover, cache cleaner, temporary file remover, windows cleaner, macos cleaner, linux cleaner, android cleaner, portable cleaner, terminal cleaner, command line cleaner, cli cleaner, rust">
 
 <!-- Canonical and indexable: this is the only page on the site, and the
      canonical has to be absolute for crawlers to deduplicate against it. -->
@@ -52,7 +52,7 @@
   "@type": "SoftwareApplication",
   "name": "Cross Cleaner",
   "alternateName": "Cross_Cleaner",
-  "keywords": "ccleaner alternative, bleachbit alternative, cross cleaner, system cleaner, disk cleanup, junk file remover, cache cleaner, temporary file remover, windows cleaner, macos cleaner, linux cleaner, android cleaner, portable cleaner, terminal cleaner, rust",
+  "keywords": "ccleaner alternative, bleachbit alternative, cross cleaner, system cleaner, disk cleanup, junk file remover, cache cleaner, temporary file remover, windows cleaner, macos cleaner, linux cleaner, android cleaner, portable cleaner, terminal cleaner, command line cleaner, cli cleaner, rust",
   "description": "Addon-style system cleanup tool that removes temporary files, cache and other system junk on Windows, macOS, Linux and Android.",
   "url": "https://Cross-Cleaner.github.io",
   "downloadUrl": "https://github.com/Cross-Cleaner/Cross-Cleaner/releases/latest",
@@ -67,13 +67,14 @@
   "author": { "@type": "Organization", "name": "Cross-Cleaner" },
   "featureList": [
     "Removes temporary files, cache and system junk",
-    "Window app and terminal app",
+    "Window app, terminal app and command line app",
     "Windows, macOS, Linux and Android",
     "Native x86_64 and arm64 builds",
     "In-app updates",
     "Free and open source under GPL-3.0",
     "Multi-threaded sweeps with rayon for parallel disk access",
     "262 catalogued programs across 564 paths on Windows",
+    "Scriptable cleanup with a command line app, including dry runs and JSON output",
     "A lightweight CCleaner alternative",
     "A BleachBit alternative that also covers Android"
   ]
@@ -158,8 +159,9 @@
 
       <p class="hero__lead">
         Cross Cleaner removes temporary files, caches and leftover system junk.
-        It ships as a native window app and as a terminal app, and it builds for
-        Windows, macOS, Linux and Android &mdash; x86_64 and arm64 alike.
+        It ships as a native window app, as a terminal app and as a command line
+        app, and it builds for Windows, macOS, Linux and Android &mdash; x86_64
+        and arm64 alike.
       </p>
 
       <div class="hero__actions">
@@ -216,8 +218,8 @@
 
         <article class="card reveal">
           <span class="card__icon"><svg class="icon" aria-hidden="true"><use href="#i-widgets"></use></svg></span>
-          <h3>Window app or terminal app</h3>
-          <p>The GUI is egui; the TUI is ratatui and runs anywhere a shell does. Same engine, same database, your choice of surface.</p>
+          <h3>Three ways to drive it</h3>
+          <p>The GUI is egui, the TUI is ratatui and the CLI is clap &mdash; all three on the same engine and the same database. Pick the surface that fits the moment.</p>
         </article>
 
         <article class="card reveal">
@@ -280,14 +282,15 @@
             BleachBit is open source, cross-platform and well established, so
             take this as a real option and not an upgrade. Cross Cleaner
             differs in three specifics: it builds for Android as well, it
-            ships a native terminal app next to the window app, and its
-            cleanup catalogs are published in full &mdash; 262 programs across
-            564 paths on Windows, 71 programs across 162 paths on Linux, every
-            one of them listed by name in the repository.
+            ships a native terminal app and a scriptable command line app next
+            to the window app, and its cleanup catalogs are published in full
+            &mdash; 262 programs across 564 paths on Windows, 71 programs across
+            162 paths on Linux, every one of them listed by name in the
+            repository.
           </p>
           <div class="chips">
             <span class="chip">Also builds for Android</span>
-            <span class="chip">TUI and GUI</span>
+            <span class="chip">GUI, TUI and CLI</span>
             <span class="chip">Public catalogs</span>
           </div>
         </article>
@@ -386,6 +389,7 @@
               </a>
               <a class="btn btn--outlined" href="https://github.com/Cross-Cleaner/Cross-Cleaner/releases/latest/download/Windows-Cross_Cleaner_GUI.exe" rel="noopener">GUI</a>
               <a class="btn btn--outlined" href="https://github.com/Cross-Cleaner/Cross-Cleaner/releases/latest/download/Windows-Cross_Cleaner_TUI.exe" rel="noopener">TUI</a>
+              <a class="btn btn--outlined" href="https://github.com/Cross-Cleaner/Cross-Cleaner/releases/latest/download/Windows-Cross_Cleaner_CLI.exe" rel="noopener">CLI</a>
             </div>
           </div>
 
@@ -405,6 +409,7 @@
               </a>
               <a class="btn btn--outlined" href="https://github.com/Cross-Cleaner/Cross-Cleaner/releases/latest/download/Windows-Arm64-Cross_Cleaner_GUI.exe" rel="noopener">GUI</a>
               <a class="btn btn--outlined" href="https://github.com/Cross-Cleaner/Cross-Cleaner/releases/latest/download/Windows-Arm64-Cross_Cleaner_TUI.exe" rel="noopener">TUI</a>
+              <a class="btn btn--outlined" href="https://github.com/Cross-Cleaner/Cross-Cleaner/releases/latest/download/Windows-Arm64-Cross_Cleaner_CLI.exe" rel="noopener">CLI</a>
             </div>
           </div>
         </div>
@@ -429,6 +434,7 @@
                 <svg class="icon" aria-hidden="true"><use href="#i-download"></use></svg>GUI
               </a>
               <a class="btn btn--outlined" href="https://github.com/Cross-Cleaner/Cross-Cleaner/releases/latest/download/Linux-Cross_Cleaner_TUI" rel="noopener">TUI</a>
+              <a class="btn btn--outlined" href="https://github.com/Cross-Cleaner/Cross-Cleaner/releases/latest/download/Linux-Cross_Cleaner_CLI" rel="noopener">CLI</a>
               <a class="btn btn--outlined" href="https://github.com/Cross-Cleaner/Cross-Cleaner/releases/latest/download/cross-cleaner-x86_64.AppImage" rel="noopener">
                 <svg class="icon" aria-hidden="true"><use href="#i-download"></use></svg>AppImage
               </a>
@@ -453,6 +459,7 @@
                 <svg class="icon" aria-hidden="true"><use href="#i-download"></use></svg>GUI
               </a>
               <a class="btn btn--outlined" href="https://github.com/Cross-Cleaner/Cross-Cleaner/releases/latest/download/Linux-Arm64-Cross_Cleaner_TUI" rel="noopener">TUI</a>
+              <a class="btn btn--outlined" href="https://github.com/Cross-Cleaner/Cross-Cleaner/releases/latest/download/Linux-Arm64-Cross_Cleaner_CLI" rel="noopener">CLI</a>
               <a class="btn btn--outlined" href="https://github.com/Cross-Cleaner/Cross-Cleaner/releases/latest/download/cross-cleaner-aarch64.AppImage" rel="noopener">
                 <svg class="icon" aria-hidden="true"><use href="#i-download"></use></svg>AppImage
               </a>
@@ -480,6 +487,7 @@
                 <svg class="icon" aria-hidden="true"><use href="#i-download"></use></svg>GUI
               </a>
               <a class="btn btn--outlined" href="https://github.com/Cross-Cleaner/Cross-Cleaner/releases/latest/download/MacOS-Arm64-Cross_Cleaner_TUI" rel="noopener">TUI</a>
+              <a class="btn btn--outlined" href="https://github.com/Cross-Cleaner/Cross-Cleaner/releases/latest/download/MacOS-Arm64-Cross_Cleaner_CLI" rel="noopener">CLI</a>
             </div>
           </div>
         </div>
@@ -509,8 +517,9 @@
       <p class="download__footer reveal">
         Older builds live on the
         <a href="https://github.com/Cross-Cleaner/Cross-Cleaner/releases" rel="noopener">releases page</a>.
-        Running the terminal app instead of the window app? Both read the same
-        database, so a GUI session and a TUI session never disagree.
+        GUI, TUI and CLI all read the same database, so a window session, a
+        terminal session and a scheduled script never disagree about what a
+        selection covers.
       </p>
     </div>
   </section>
@@ -520,9 +529,9 @@
     <div class="wrap">
       <header class="section__head reveal">
         <span class="chip">Interface</span>
-        <h2>One engine, two surfaces</h2>
-        <p>Pick the window app for a quick sweep, or the terminal app when you
-          live in a shell.</p>
+        <h2>One engine, three surfaces</h2>
+        <p>Pick the window app for a quick sweep, the terminal app when you
+          live in a shell, or the command line app when you script it.</p>
       </header>
 
       <div class="gallery">
@@ -626,6 +635,49 @@
             <kbd>space</kbd> and <kbd>enter</kbd>.
           </figcaption>
         </figure>
+
+        <!-- Command line app. The transcript is the real output of
+             `cli categories`, `cli plan` and `cli clean` against the same
+             database the two mocks above are driven from: same category names,
+             same entry counts, same sort order. Crashes is a category that is
+             normally empty, which is what makes "0 B ... across 0 programs" a
+             truthful run rather than a broken one. -->
+        <figure class="mock reveal">
+          <div class="term">
+            <div class="term__head">
+              <b>shell</b><span class="t-dim">&middot; bash / PowerShell</span>
+              <span class="t-acc">[cli]</span>
+            </div>
+            <div class="term__frame" role="region" aria-label="Command line transcript">
+              <div class="term__cli">
+                <div class="cli-line"><span class="t-dim">$</span> <span class="cli-cmd">cli categories</span></div>
+                <div class="cli-out"><b>Cache</b> <span class="t-dim">(142)</span></div>
+                <div class="cli-out cli-sub"><span class="t-dim">Uncategorized (142)</span></div>
+                <div class="cli-out"><b>Logs</b> <span class="t-dim">(538)</span></div>
+                <div class="cli-out cli-sub"><span class="t-dim">Uncategorized (534)</span></div>
+                <div class="cli-out cli-sub">Examples <span class="t-dim">(4)</span></div>
+                <div class="cli-out cli-sub"><span class="t-dim">…</span></div>
+                <div class="cli-line"><span class="t-dim">$</span> <span class="cli-cmd">cli plan -c Browser/Passwords</span></div>
+                <div class="cli-out"><span class="cli-good">1 program and 4 paths would be cleaned.</span></div>
+                <div class="cli-out">&nbsp;&nbsp;Vivaldi Browser <span class="t-dim">&rarr; Browser</span></div>
+                <div class="cli-line"><span class="t-dim">$</span> <span class="cli-cmd">cli clean -c Crashes -y</span></div>
+                <div class="cli-out">Removed 0 B in 0 files and 0 directories across 0 programs</div>
+                <div class="cli-out t-dim">Nothing matched &mdash; the selected paths were already empty.</div>
+              </div>
+            </div>
+            <div class="term__foot t-dim" id="cli-foot">
+              -c category[/sub] &middot; -x exclude category &middot; -p program[=category] &middot;
+              -e exclude program &middot; -a all &middot; --dry-run &middot; --json &middot; -y yes
+            </div>
+          </div>
+          <figcaption>
+            Command line app &mdash; the same selection rules, written down instead
+            of clicked. <code>-c Cache</code> a category,
+            <code>-c Cache/Browser</code> one subcategory,
+            <code>-p "Chrome=Logs"</code> one program narrowed to one category,
+            with <code>--dry-run</code> and <code>--json</code> for scripts.
+          </figcaption>
+        </figure>
       </div>
     </div>
   </section>
@@ -651,8 +703,8 @@
           <span>platform databases, minified and gzipped into the binary at compile time</span>
         </div>
         <div class="stat reveal">
-          <strong>10</strong>
-          <span>published binaries: Windows, Linux and macOS, window and terminal, two architectures</span>
+          <strong>15</strong>
+          <span>published binaries: Windows, Linux and macOS, window, terminal and command line, two architectures</span>
         </div>
         <div class="stat reveal">
           <strong>1 file</strong>
