@@ -406,7 +406,10 @@ p  { margin: 0; text-wrap: pretty; }
 .hero {
   position: relative;
   overflow: hidden;
-  padding-block: clamp(3.5rem, 10vw, 7rem);
+  /* Asymmetric on purpose: full padding above the title, much less below. The
+     section that follows brings its own top padding, and the two used to add up
+     to 13rem of nothing between the status badges and the Features chip. */
+  padding-block: clamp(3.5rem, 10vw, 7rem) clamp(1.5rem, 3.5vw, 2.5rem);
   background:
     radial-gradient(120% 90% at 50% -20%,
       color-mix(in srgb, var(--md-sys-color-primary-container) 70%, transparent) 0%,
@@ -448,6 +451,19 @@ p  { margin: 0; text-wrap: pretty; }
   align-items: center;
   gap: 0.75rem;
   margin-top: 2rem;
+}
+
+/* Second hero row: the community links. Tight enough to read as a footer to
+   the actions above rather than as a separate block. */
+.hero__community {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  /* btn--text already carries 1rem of inline padding, so the usual 0.75rem gap
+     would separate these two further than they deserve. */
+  gap: 0.25rem;
+  margin-top: 0.5rem;
 }
 
 .badges {
@@ -1238,7 +1254,11 @@ p  { margin: 0; text-wrap: pretty; }
 }
 .cli-out b { font-weight: 700; }
 .cli-sub { padding-left: 1.5ch; }
+/* The two report colours the CLI uses for a verdict: green for what a run
+   frees, yellow for what it cannot. Named here rather than reusing `.t-on` /
+   `.t-warn`, because those belong to the terminal mock's checkbox column. */
 .cli-good { color: rgb(60, 180, 90); }
+.cli-warn { color: rgb(220, 170, 40); }
 
 /* Inside the transcript the dim colour is the app's own `--dim`, not a mock
    decoration, so it is set from the same variable the terminal mock uses. */
@@ -1395,7 +1415,7 @@ p  { margin: 0; text-wrap: pretty; }
 }
 
 @media print {
-  .app-bar, .download__links, .cta__actions, .hero__actions, .badges { display: none; }
+  .app-bar, .download__links, .cta__actions, .hero__actions, .hero__community, .badges { display: none; }
   .js-reveal .reveal { opacity: 1; transform: none; }
   body { background: #fff; color: #000; }
   .section { padding-block: 1.5rem; }

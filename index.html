@@ -91,6 +91,12 @@
   <symbol id="i-download" viewBox="0 -960 960 960"><path d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/></symbol>
   <symbol id="i-terminal" viewBox="0 -960 960 960"><path d="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm0-80h640v-400H160v400Zm140-40-56-56 103-104-104-104 57-56 160 160-160 160Zm180 0v-80h240v80H480Z"/></symbol>
   <symbol id="i-forum" viewBox="0 -960 960 960"><path d="M880-80 720-240H320q-33 0-56.5-23.5T240-320v-40h440q33 0 56.5-23.5T760-440v-280h40q33 0 56.5 23.5T880-640v560ZM160-473l47-47h393v-280H160v327ZM80-280v-520q0-33 23.5-56.5T160-880h440q33 0 56.5 23.5T680-800v280q0 33-23.5 56.5T600-440H240L80-280Zm80-240v-280 280Z"/></symbol>
+  <!-- Reddit's own mark rather than a Material Symbol: no Material icon
+       reads as Reddit the way the logo does, and i-forum is already Discord's.
+       Simple Icons (CC0), drawn on a 0 0 24 24 grid instead of the 960 grid the
+       symbols above use. A <symbol> keeps its own viewBox, so both scales sit
+       side by side without a transform, and fill: currentColor themes it. -->
+  <symbol id="i-reddit" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12c0 3.314 1.343 6.314 3.515 8.485l-2.286 2.286C.775 23.225 1.097 24 1.738 24H12c6.627 0 12-5.373 12-12S18.627 0 12 0Zm4.388 3.199c1.104 0 1.999.895 1.999 1.999 0 1.105-.895 2-1.999 2-.946 0-1.739-.657-1.947-1.539v.002c-1.147.162-2.032 1.15-2.032 2.341v.007c1.776.067 3.4.567 4.686 1.363.473-.363 1.064-.58 1.707-.58 1.547 0 2.802 1.254 2.802 2.802 0 1.117-.655 2.081-1.601 2.531-.088 3.256-3.637 5.876-7.997 5.876-4.361 0-7.905-2.617-7.998-5.87-.954-.447-1.614-1.415-1.614-2.538 0-1.548 1.255-2.802 2.803-2.802.645 0 1.239.218 1.712.585 1.275-.79 2.881-1.291 4.64-1.365v-.01c0-1.663 1.263-3.034 2.88-3.207.188-.911.993-1.595 1.959-1.595Zm-8.085 8.376c-.784 0-1.459.78-1.506 1.797-.047 1.016.64 1.429 1.426 1.429.786 0 1.371-.369 1.418-1.385.047-1.017-.553-1.841-1.338-1.841Zm7.406 0c-.786 0-1.385.824-1.338 1.841.047 1.017.634 1.385 1.418 1.385.785 0 1.473-.413 1.426-1.429-.046-1.017-.721-1.797-1.506-1.797Zm-3.703 4.013c-.974 0-1.907.048-2.77.135-.147.015-.241.168-.183.305.483 1.154 1.622 1.964 2.953 1.964 1.33 0 2.47-.81 2.953-1.964.057-.137-.037-.29-.184-.305-.863-.087-1.795-.135-2.769-.135Z"/></symbol>
   <symbol id="i-auto_awesome" viewBox="0 -960 960 960"><path d="m760-600-50-110-110-50 110-50 50-110 50 110 110 50-110 50-50 110Zm0 560-50-110-110-50 110-50 50-110 50 110 110 50-110 50-50 110ZM360-160 260-380 40-480l220-100 100-220 100 220 220 100-220 100-100 220Zm0-194 40-86 86-40-86-40-40-86-40 86-86 40 86 40 40 86Zm0-126Z"/></symbol>
   <symbol id="i-bolt" viewBox="0 -960 960 960"><path d="m422-232 207-248H469l29-227-185 267h139l-30 208ZM320-80l40-280H160l360-520h80l-40 320h240L400-80h-80Zm151-390Z"/></symbol>
   <symbol id="i-verified_user" viewBox="0 -960 960 960"><path d="m438-338 226-226-57-57-169 169-84-84-57 57 141 141Zm42 258q-139-35-229.5-159.5T160-516v-244l320-120 320 120v244q0 152-90.5 276.5T480-80Zm0-84q104-33 172-132t68-220v-189l-240-90-240 90v189q0 121 68 220t172 132Zm0-316Z"/></symbol>
@@ -171,8 +177,17 @@
         <a class="btn btn--outlined btn--lg" href="https://github.com/Cross-Cleaner/Cross-Cleaner" rel="noopener">
           <svg class="icon" aria-hidden="true"><use href="#i-terminal"></use></svg>Build from source
         </a>
+        </div>
+
+      <!-- Community links sit on their own row under the two primary actions:
+           four buttons on one line crowds the pair that actually matter, and the
+           text buttons are quieter by design. -->
+      <div class="hero__community">
         <a class="btn btn--text btn--lg" href="https://discord.gg/wmJdUBaztX" rel="noopener">
           <svg class="icon" aria-hidden="true"><use href="#i-forum"></use></svg>Discord
+        </a>
+        <a class="btn btn--text btn--lg" href="https://www.reddit.com/r/Cross_Cleaner" rel="noopener">
+          <svg class="icon" aria-hidden="true"><use href="#i-reddit"></use></svg>Reddit
         </a>
       </div>
 
@@ -657,12 +672,11 @@
                 <div class="cli-out cli-sub"><span class="t-dim">Uncategorized (534)</span></div>
                 <div class="cli-out cli-sub">Examples <span class="t-dim">(4)</span></div>
                 <div class="cli-out cli-sub"><span class="t-dim">…</span></div>
-                <div class="cli-line"><span class="t-dim">$</span> <span class="cli-cmd">cli plan -c Browser/Passwords</span></div>
-                <div class="cli-out"><span class="cli-good">1 program and 4 paths would be cleaned.</span></div>
-                <div class="cli-out">&nbsp;&nbsp;Vivaldi Browser <span class="t-dim">&rarr; Browser</span></div>
-                <div class="cli-line"><span class="t-dim">$</span> <span class="cli-cmd">cli clean -c Crashes -y</span></div>
-                <div class="cli-out">Removed 0 B in 0 files and 0 directories across 0 programs</div>
-                <div class="cli-out t-dim">Nothing matched &mdash; the selected paths were already empty.</div>
+                <div class="cli-line"><span class="t-dim">$</span> <span class="cli-cmd">cli clean -c Cache --dry-run</span></div>
+                <div class="cli-out"><span class="cli-good">Would free 598.5 MB in 2008 files and 98 directories</span></div>
+                <div class="cli-line"><span class="t-dim">$</span> <span class="cli-cmd">cli clean -c Browser --dry-run</span></div>
+                <div class="cli-out"><span class="cli-warn">7 files are in use and will not be removed:</span></div>
+                <div class="cli-out">&nbsp;&nbsp;<span class="cli-warn">7.6 MB held back</span> <span class="t-dim">&mdash; close Vivaldi and run again.</span></div>
               </div>
             </div>
             <div class="term__foot t-dim" id="cli-foot">
@@ -765,6 +779,7 @@
       <a href="https://github.com/Cross-Cleaner/Cross-Cleaner/issues" rel="noopener">Issues</a>
       <a href="https://github.com/Cross-Cleaner/Cross-Cleaner/blob/main/BUILD.md" rel="noopener">Build guide</a>
       <a href="https://discord.gg/wmJdUBaztX" rel="noopener">Discord</a>
+      <a href="https://www.reddit.com/r/Cross_Cleaner" rel="noopener">Reddit</a>
     </nav>
   </div>
   <div class="wrap footer__legal">
