@@ -434,10 +434,10 @@
         <div class="download__panel" role="tabpanel" id="panel-linux" aria-labelledby="tab-linux" hidden>
           <p class="download__note">
             Portable binaries, or ready-made packages: the .deb installs through
-            apt, the AppImage runs in place. Audio needs ALSA headers only if you
-            build from source. The packages are built without self-update on
-            purpose, so apt owns the installed version and upgrades go through
-            the package manager.
+            apt, the AUR package installs through pacman, the AppImage runs in
+            place. Audio needs ALSA headers only if you build from source. The
+            packages are built without self-update on purpose, so the package
+            manager owns the installed version and upgrades go through it.
           </p>
           <div class="download__row">
             <div class="download__kind">
@@ -485,6 +485,31 @@
               </a>
             </div>
           </div>
+
+          <hr class="divider">
+
+          <div class="download__row">
+            <div class="download__kind">
+              <h3>Arch Linux</h3>
+              <div class="chips">
+                <span class="chip"><svg class="icon" aria-hidden="true"><use href="#i-terminal"></use></svg>AUR</span>
+                <span class="chip"><svg class="icon" aria-hidden="true"><use href="#i-install_desktop"></use></svg>Package</span>
+              </div>
+            </div>
+            <div class="download__links">
+              <a class="btn btn--filled" href="https://aur.archlinux.org/packages/cross-cleaner" rel="noopener">
+                <svg class="icon" aria-hidden="true"><use href="#i-download"></use></svg>AUR package
+              </a>
+            </div>
+          </div>
+
+          <p class="download__note">
+            Build and install through your AUR helper &mdash; for example
+            <code>yay -S cross-cleaner</code> &mdash; or install the package
+            <code>cross-cleaner</code> with <code>pacman -U</code>. Review the
+            <a href="https://aur.archlinux.org/cross-cleaner.git" rel="noopener">PKGBUILD</a>
+            before you build, as always with the AUR.
+          </p>
         </div>
 
         <div class="download__panel" role="tabpanel" id="panel-macos" aria-labelledby="tab-macos" hidden>

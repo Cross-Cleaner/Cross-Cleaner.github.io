@@ -636,7 +636,8 @@ p  { margin: 0; text-wrap: pretty; }
 /* Flags in a caption are code, so they get the monospace face rather than the
    serif-ish default: `-c Cache/Browser` has to read as one token. */
 .mock figcaption code,
-.section__note code {
+.section__note code,
+.download__note code {
   font-family: var(--font-mono);
   font-size: 0.9em;
   padding: 0.1em 0.35em;
