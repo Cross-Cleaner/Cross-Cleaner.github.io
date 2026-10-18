@@ -425,7 +425,8 @@
         <div class="download__panel" role="tabpanel" id="panel-linux" aria-labelledby="tab-linux" hidden>
           <p class="download__note">
             Portable binaries, or ready-made packages: the .deb installs through
-            apt, the AUR package installs through pacman, the AppImage runs in
+            apt, the .rpm through dnf or zypper, the AUR package installs through
+            pacman, the AppImage runs in
             place. Audio needs ALSA headers only if you build from source. The
             packages are built without self-update on purpose, so the package
             manager owns the installed version and upgrades go through it.
@@ -448,6 +449,9 @@
               </a>
               <a class="btn btn--outlined" href="https://github.com/Cross-Cleaner/Cross-Cleaner/releases/latest/download/cross-cleaner_amd64.deb" rel="noopener">
                 <svg class="icon" aria-hidden="true"><use href="#i-install_desktop"></use></svg>.deb
+              </a>
+              <a class="btn btn--outlined" href="https://github.com/Cross-Cleaner/Cross-Cleaner/releases/latest/download/cross-cleaner_x86_64.rpm" rel="noopener">
+                <svg class="icon" aria-hidden="true"><use href="#i-install_desktop"></use></svg>.rpm
               </a>
             </div>
           </div>
@@ -474,6 +478,9 @@
               <a class="btn btn--outlined" href="https://github.com/Cross-Cleaner/Cross-Cleaner/releases/latest/download/cross-cleaner_arm64.deb" rel="noopener">
                 <svg class="icon" aria-hidden="true"><use href="#i-install_desktop"></use></svg>.deb
               </a>
+              <a class="btn btn--outlined" href="https://github.com/Cross-Cleaner/Cross-Cleaner/releases/latest/download/cross-cleaner_aarch64.rpm" rel="noopener">
+                <svg class="icon" aria-hidden="true"><use href="#i-install_desktop"></use></svg>.rpm
+              </a>
             </div>
           </div>
 
@@ -493,6 +500,34 @@
               </a>
             </div>
           </div>
+
+          <hr class="divider">
+
+          <div class="download__row">
+            <div class="download__kind">
+              <h3>NixOS</h3>
+              <div class="chips">
+                <span class="chip"><svg class="icon" aria-hidden="true"><use href="#i-terminal"></use></svg>Flake</span>
+                <span class="chip"><svg class="icon" aria-hidden="true"><use href="#i-install_desktop"></use></svg>Profile</span>
+              </div>
+            </div>
+            <div class="download__links">
+              <a class="btn btn--filled" href="https://github.com/Cross-Cleaner/Cross-Cleaner/blob/main/flake.nix" rel="noopener">
+                <svg class="icon" aria-hidden="true"><use href="#i-install_desktop"></use></svg>flake.nix
+              </a>
+            </div>
+          </div>
+
+          <p class="download__note">
+            Install the flake into your profile with
+            <code>nix profile install github:Cross-Cleaner/Cross-Cleaner</code>, or
+            run it without installing: <code>nix run
+            github:Cross-Cleaner/Cross-Cleaner</code> opens the window app, while
+            <code>nix run github:Cross-Cleaner/Cross-Cleaner#cross-cleaner-tui</code>
+            and <code>#cross-cleaner-cli</code> launch the terminal and headless
+            editions. The flake is pinned to nixos-unstable and builds without the
+            self-updater, so Nix owns the installed version.
+          </p>
 
           <p class="download__note">
             Build and install through your AUR helper &mdash; for example
